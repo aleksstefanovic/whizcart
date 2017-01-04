@@ -361,9 +361,12 @@ class appMaps {
 				$scope.map.center = $scope.places[0].geometry.location;
 
 				$scope.userLocation = {
-					lat: $scope.places[0].geometry.location.lat(),
-					lng: $scope.places[0].geometry.location.lng()
+					lat: parseFloat($scope.places[0].geometry.location.lat().toFixed(5)),
+					lng: parseFloat($scope.places[0].geometry.location.lng().toFixed(5))
 				}
+
+				console.log($scope.userLocation.lat);
+				console.log($scope.userLocation.lng);
 
 				var userLocationMarkerInfo = {
 					id: "userLocationMarker", 
@@ -387,8 +390,6 @@ class appMaps {
 				populateDestinationArray($scope.relevantStoresToSearch, $scope.destArray);
 
 				var service = new google.maps.DistanceMatrixService;
-				console.log($scope.userLocation.lat);
-				console.log($scope.userLocation.lng);
 				
 				service.getDistanceMatrix({
 					origins: [$scope.userLocation],
@@ -401,12 +402,9 @@ class appMaps {
 					if (status != 'OK'){
 						console.log("Error was: " + status);
 						return "error";
-						console.log("Batman muts come back!")
 					}
 					else{
-						console.log("Line 410");
 						var originList = response.originAddresses;
-						console.log("Line 412");
 						var destinationList = response.destinationAddresses;
 						var results = response.rows[0].elements;
 
