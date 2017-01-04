@@ -357,6 +357,7 @@ class appMaps {
 			}
 			else{
 				console.log("Succesfully found user location!");
+
 				$scope.map.center = $scope.places[0].geometry.location;
 
 				$scope.userLocation = {
@@ -364,10 +365,6 @@ class appMaps {
 					lng: $scope.places[0].geometry.location.lng()
 				}
 
-				$scope.userLocation.lat = $scope.userLocation.lat.toFixed(5);
-				$scope.userLocation.lng = $scope.userLocation.lng.toFixed(5);
-
-				console.log("$SCOPE.USERLOCATION: " + $scope.userLocation);
 				var userLocationMarkerInfo = {
 					id: "userLocationMarker", 
 					latitude: $scope.userLocation.lat,
@@ -390,7 +387,9 @@ class appMaps {
 				populateDestinationArray($scope.relevantStoresToSearch, $scope.destArray);
 
 				var service = new google.maps.DistanceMatrixService;
-				//console.log(JSON.stringify($scope.destArray));
+				console.log($scope.userLocation.lat);
+				console.log($scope.userLocation.lng);
+				
 				service.getDistanceMatrix({
 					origins: [$scope.userLocation],
 					destinations: [$scope.destArray[0], $scope.destArray[1], $scope.destArray[2], $scope.destArray[3], $scope.destArray[4], $scope.destArray[5], $scope.destArray[6], $scope.destArray[7], $scope.destArray[8], $scope.destArray[9], $scope.destArray[10], $scope.destArray[11], $scope.destArray[12], $scope.destArray[13], $scope.destArray[14], $scope.destArray[15], $scope.destArray[16], $scope.destArray[17], $scope.destArray[18], $scope.destArray[19], $scope.destArray[20], $scope.destArray[21], $scope.destArray[22], $scope.destArray[23], $scope.destArray[24]],
@@ -402,9 +401,12 @@ class appMaps {
 					if (status != 'OK'){
 						console.log("Error was: " + status);
 						return "error";
+						console.log("Batman muts come back!")
 					}
 					else{
+						console.log("Line 410");
 						var originList = response.originAddresses;
+						console.log("Line 412");
 						var destinationList = response.destinationAddresses;
 						var results = response.rows[0].elements;
 
