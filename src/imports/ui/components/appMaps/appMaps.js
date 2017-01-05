@@ -63,6 +63,8 @@ class appMaps {
 		$scope.userLocation;
 		$scope.userLocationSearchBox2;
 
+		var previousUserLocation; // For preventing extra calls to the google maps API
+
 		$scope.maxDistance = 5;
 
 		$scope.map = {
@@ -171,79 +173,6 @@ class appMaps {
 		$scope.chkBoxChanged = function(){
 			console.log("Check box changed!");
 		}
-
-		$("#chkBoxFoodBasics").change(function(){
-			if (this.checked){
-				$scope.franchises.push("Food Basics");
-				console.log("Franchises: " + $scope.franchises);
-				postalCodeChanged($scope.userLocationSearchBox2);
-			}
-			else if(!this.checked){
-				arrayRemove($scope.franchises, "Food Basics");
-			}
-			console.log("Franchises: " + $scope.franchises);
-		});
-
-
-		$("#chkBoxSobeys").change(function(){
-			if (this.checked){
-				$scope.franchises.push("Sobeys");
-				console.log("Franchises: " + $scope.franchises);
-				postalCodeChanged($scope.userLocationSearchBox2);
-			}
-			else if(!this.checked){
-				arrayRemove($scope.franchises, "Sobeys");
-			}
-			console.log("Franchises: " + $scope.franchises);
-		});
-
-		$("#chkBoxZehrs").change(function(){
-			if (this.checked){
-				$scope.franchises.push("Zehrs");
-				console.log("Franchises: " + $scope.franchises);
-				postalCodeChanged($scope.userLocationSearchBox2);
-			}
-			else if(!this.checked){
-				arrayRemove($scope.franchises, "Zehrs");
-			}
-			console.log("Franchises: " + $scope.franchises);
-		});
-
-		$("#chkBoxFreshCo").change(function(){
-			if (this.checked){
-				$scope.franchises.push("FreshCo");
-				console.log("Franchises: " + $scope.franchises);
-				postalCodeChanged($scope.userLocationSearchBox2);
-			}
-			else if(!this.checked){
-				arrayRemove($scope.franchises, "FreshCo");
-			}
-			console.log( "Franchises: " + $scope.franchises);
-		});
-
-		$("#chkBoxNoFrills").change(function(){
-			if (this.checked){
-				$scope.franchises.push("NoFrills");
-				console.log("Franchises: " + $scope.franchises);
-				postalCodeChanged($scope.userLocationSearchBox2);
-			}
-			else if(!this.checked){
-				arrayRemove($scope.franchises, "NoFrills");
-			}
-			console.log("Franchises: " + $scope.franchises);
-		});
-
-		$("#chkBoxSoren").change(function(){
-			if (this.checked){
-				$scope.franchises.push("Soren");
-				console.log("Franchises: " + $scope.franchises);
-				postalCodeChanged($scope.userLocationSearchBox2);
-			}
-			else if(!this.checked){
-				arrayRemove($scope.franchises, "Soren");
-			}
-			console.log("Franchises: " + $scope.franchises);
-		});
 
 		function arrayRemove(array, item){
 			console.log($scope.existingStoreMarkers);
