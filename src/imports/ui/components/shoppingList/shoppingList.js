@@ -115,6 +115,10 @@ class ShoppingList {
 
 const name = 'shoppingList';
 
+$(document).on("scrollstart",function(){
+  alert("Started Scrolling!");
+});
+
 // create a module
 export default angular.module(name, [
   angularMeteor,

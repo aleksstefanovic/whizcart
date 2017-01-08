@@ -47,6 +47,8 @@ class appMaps {
 
 		var _timeout;
 		var lastOpenInfoWindow; 
+		var oldPlace = null; 
+		var scrollTimer; 
 		$scope.favStoreMarkers = [];
 		$scope.userLocationMarker = [];
 		$scope.existingStoreMarkers = [];
@@ -63,9 +65,9 @@ class appMaps {
 		$scope.userLocation;
 		$scope.userLocationSearchBox2;
 
-		var previousUserLocation; // For preventing extra calls to the google maps API
-
 		$scope.maxDistance = 5;
+
+		$scope.mouseOver = false;
 
 		$scope.map = {
 			center: {
@@ -86,9 +88,25 @@ class appMaps {
 				closeClick: function() {
 					this.show = false;
 				},
-				options: {} 
 			}, 
+			options: {
+				scrollwheel: true
+			},
+
 			events: {
+
+				/*mouseover: function(map){
+					console.log("Inside Mouseover");
+					$scope.map.options.scrollwheel = false;
+					console.log($scope.map.options.scrollwheel);
+				},	*/
+
+				mouseout: function(map){
+					console.log("Mouse left map!");
+					$scope.map.options.scrollwheel = false;
+					console.log($scope.map.options.scrollwheel);
+				},
+
 				bounds_changed: function(map) {
 					console.log("Map bounds_Changed event fired!");
 					$scope.bounds = map.getBounds();
@@ -109,6 +127,23 @@ class appMaps {
 				},
 			}
 		};
+
+		$('.angular-google-map-container').click(function(){
+			console.log("Map clicked!")
+			$scope.map.options.scrollwheel = true;
+			console.log($scope.map.options.scrollwheel);
+		})
+
+		$(window).scroll(function(){
+			$scope.map.options.scrollwheel = false;
+			if (scrollTimer){
+				clearInterval(scrollTimer);
+			}
+			scrollTimer = setTimeout(function(){
+				$scope.map.options.scrollwheel = true;
+			}, 100)
+		});
+
 
 		var foundUserLocationHTML5 = function(position){
 			$scope.map.center = {
@@ -278,14 +313,15 @@ class appMaps {
 				$scope.activeModel.show = false;
 			}
 
-			$scope.places = searchbox.getPlaces();
+			$scope.places = searchbox.getPlaces()
+
 
 			if($scope.places.length == 0){
 				console.log("User location not found!");
 				return;
 			}
 			else{
-				console.log("Succesfully found user location!");
+				console.log("Succesfully found user location!")
 
 				$scope.map.center = $scope.places[0].geometry.location;
 
@@ -367,6 +403,8 @@ class appMaps {
 					$scope.$apply();
 					console.log($scope.returnPostalCodes);
 				});
+
+				oldPlace = $scope.places[0].name
 			}
 		}
 
@@ -395,6 +433,7 @@ class appMaps {
 				places_changed: function(searchbox) {
 					console.log("User Location change event fired!");
 					$scope.userLocationSearchBox2 = searchbox;
+					console.log(searchbox);
 					postalCodeChanged($scope.userLocationSearchBox2);
 				}
 			},
@@ -558,7 +597,10 @@ export default angular.module('appMaps',[
 			scope.$watch('list', setupHandler, true);
 		}
 	};
-});
+})
+.run(['$templateCache', function ($templateCache) {
+	$templateCache.put('searchBoxUserLocation.tpl.html', '<input id="pac-input" type="text" ng-model="ngModel" placeholder = "userLocation">');
+}]);
 
 function config($stateProvider) {
 	'ngInject';
@@ -568,6 +610,8 @@ function config($stateProvider) {
 		template: '<app-maps></app-maps>',
 	});
 };
+
+
 
 
 

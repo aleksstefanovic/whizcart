@@ -26,7 +26,7 @@
 		<p> Max Distance: {{maxDistance}}</p>
 
 		<div>
-			<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" draggable="true">
+			<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
 
 				<ui-gmap-markers  models="favStoreMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true"> 
 					<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show" ng-cloak>
@@ -41,13 +41,11 @@
 				<ui-gmap-markers models="userLocationMarker" coords="'self'" icon="'icon'"> </ui-gmap-markers>
 				<ui-gmap-markers models="existingStoreMarkers" coords="'self'" icon="'icon'" fit="true"></ui-gmap-markers>
 
-				<ui-gmap-search-box options="searchBoxUserLocation.options" template="searchBoxUserLocation.template" events="searchBoxUserLocation.events" ></ui-gmap-search-box>
+				<ui-gmap-search-box options="searchBoxUserLocation.options" template="searchBoxUserLocation.template" events="searchBoxUserLocation.events" ng-model="searchModel.searchTerm"></ui-gmap-search-box>
 
 				<ui-gmap-search-box options="searchBoxFavouriteStores.options" template="searchBoxFavouriteStores.template" events="searchBoxFavouriteStores.events" bounds="searchBoxFavouriteStores.bounds" ></ui-gmap-search-box> 
 			</ui-gmap-google-map>
 		</div>
 	</div>
 </body>
-
-
 </form>
