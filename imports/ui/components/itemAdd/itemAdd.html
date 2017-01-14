@@ -1,0 +1,19 @@
+<form>
+		<div class = "form-group">
+			<input type = "text" ng-model = "itemAdd.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "itemAdd.change()">
+		</div>
+	<!--<div class = "form-group">
+        <input type = "text" ng-model = "itemAdd.item.name" class = "form-control">
+    </div>-->
+	<ul ng-show = "itemAdd.showMe">
+  		<li ng-repeat="item in itemAdd.items">
+            {{item.code}}
+            {{item.franchise}}
+            {{item.name}}
+  		</li>
+	</ul>
+	<button ng-click = "itemAdd.addItemToFavs()" class = "btn btn-success"> Add Item to Favourites</button>
+	<button ng-click = "itemAdd.addToShoppingList()" class = "btn btn-success"> Add Item to Shopping List</button>
+	<button ng-click = "itemAdd.addStoreToFavs()" class = "btn btn-success"> Add Store to Favourites</button>
+	<button ng-click = "itemAdd.getPrice()" class = "btn btn-success">Get Best Price</button>
+</form>
