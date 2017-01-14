@@ -60,6 +60,7 @@ class ItemAdd {
         );
 	};
   change(){
+      console.log("Search text typed in");
       if (this.searchText === ''){
         this.showMe = false;
         return;
