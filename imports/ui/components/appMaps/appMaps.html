@@ -13,7 +13,16 @@
 		<div ng-repeat="stores in allFranchisesInSmartCart"> 
 			<input type="checkbox" value="{{stores}}" check-list='checked_stores'> {{stores}} 
 		</div>
+
 		<div> The following stores are checked: {{checked_stores | json}} </div>
+
+		<md-content layout="column">
+			<md-virtual-repeat-container id="horizontal-container" md-orient-horizontal> 
+			<div md-virtual-repeat="item in allFranchisesInSmartCart" class="repeated-item" flex>
+					{{item}}
+				</div>
+			</md-virtual-repeat-container>
+		</md-content>
 
 		<!--<label> <input type="checkbox" id="chkBoxFoodBasics" checked="true"> Food Basics </label> <br>
 		<label> <input type="checkbox" id="chkBoxSobeys" checked="true"> Sobeys </label> <br>

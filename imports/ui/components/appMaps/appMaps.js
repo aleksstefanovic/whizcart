@@ -1,5 +1,6 @@
 import angular from 'angular';
 import angularMeteor from 'angular-meteor';
+import angularMaterial from 'angular-material';
 import 'angular-simple-logger';
 import 'angular-google-maps';
 import uiRouter from 'angular-ui-router';
@@ -19,6 +20,11 @@ class appMaps {
 		console.log("From the constructor inside appMaps.js");
 		$scope.allFranchisesInSmartCart = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills", "Soren"];
 		$scope.checked_stores = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills", "Soren"];
+
+		/*$scope.items = [];	
+		for (var i = 0; i < 100; i++){
+			items.push(i);
+		}*/
 
 		$scope.$watch('checked_stores', function(newValue, oldValue, scope){
 			console.log("checked_stores Changed!")
@@ -554,7 +560,7 @@ class appMaps {
 }
 
 export default angular.module('appMaps',[
-   'uiGmapgoogle-maps','angular-meteor']) //['uiGmapgoogle-maps', 'angular-meteor']
+   'uiGmapgoogle-maps','angular-meteor', 'ngMaterial']) //['uiGmapgoogle-maps', 'angular-meteor']
 .component('appMaps',{
 	template,
 	controllerAs: 'appMaps',
