@@ -5,14 +5,68 @@ import 'angular-google-maps';
 import uiRouter from 'angular-ui-router';
 import template from './appMaps.html';
 import { Meteor } from 'meteor/meteor'; 
+import {Items} from '../../../api/items/index';
 import {Stores} from '../../../api/stores/index';
 import './appMaps.css';
 import getRelevantStores from '../../../../scripts/getRelevantStores.js';
 import addFavStore from '../../../../scripts/addFavStore.js';
+import utilsPagination from 'angular-utils-pagination';
+import { Counts } from 'meteor/tmeasday:publish-counts';
+import addToShoppingList from '../../../../scripts/addToShoppingList.js';
+import addFavItem from '../../../../scripts/addFavItem.js';
+import getPrice from '../../../../scripts/getPrice.js';
 
 class appMaps {
-	constructor($scope, $rootScope, $compile, $timeout) {
+	constructor($scope, $rootScope, $compile, $timeout, $reactive) {
 		'ngInject'; 
+        $reactive(this).attach($scope);
+        this.subscribe('stores');
+        this.subscribe('items');
+        this.perPage = 10;
+        this.page = 1;
+        this.sort = {
+          name: 1
+        };
+        this.sort2 = {
+          code: 1
+        };
+        this.searchText = '';
+        this.showMe = false;
+        this.helpers(
+          {
+            items() { 
+            console.log("finding matches");
+	    var itemCursor = Items.find({ 
+		"name": {
+		$regex: `.*${this.getReactively('searchText')}.*`,
+			$options : 'i'}
+			      },{sort : this.getReactively('sort')});
+	    var storeCursor = Stores.find({
+		"code": {
+		$regex: `.*${this.getReactively('searchText')}.*`,
+			$options : 'i'}
+			      },{sort : this.getReactively('sort2')});
+	    var result = [];
+	    itemCursor.forEach ( function(item) {
+	    	result.push(item);
+	    });
+	    storeCursor.forEach ( function(store) {
+	    	result.push(store);
+	    });
+        //alert(result);
+	    return result;
+	    },
+            itemsCount() {return Counts.get('numberOfItems');}
+          }
+        );
+
+
+
+
+
+
+
+
 		$scope.subscribe('stores');
 		$scope.showMap = true;
 		
@@ -242,29 +296,6 @@ class appMaps {
 			}
 		}
 
-		function setDestinationIcon(franchise){
-			if(franchise == "Food Basics") {	
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FB|008000|FFFF00';
-			}
-			else if (franchise == "Sobeys") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SB|FFFFFF|000000';
-			}
-			else if (franchise == "Zehrs") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=ZH|FF6600|000000';
-			}
-			else if (franchise == "FreshCo") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FC|000000|FFFFFF';
-			}
-			else if (franchise == "NoFrills") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFFF00|FF0000';
-			}
-			else if (franchise == "Soren") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SS|ABCD00|FF0000';
-			}
-			else if (franchise == "Conestoga Mall") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFEE00|FF0000';
-			}
-		}
 
 		function setFranchiseReturnCode(franchise){
 			if(franchise == "Food Basics") {	
@@ -290,19 +321,6 @@ class appMaps {
 			}
 		}
 
-		function setStoreOnMap(i, franchise, icon, position){
-			console.log("Inside setStoreOnMap function");
-			console.log(franchise + i.toString());
-			var existingStoreMarkerInfo = {
-				id: franchise + i.toString(),
-				latitude: position.lat,
-				longitude: position.lng,
-				icon: icon
-			}
-
-			markers.push(existingStoreMarkerInfo);
-			$scope.existingStoreMarkers = markers; 
-		}
 
 		function postalCodeChanged(searchbox){
 			$scope.favStoreMarkers.length = 0;  	
@@ -388,13 +406,13 @@ class appMaps {
 
 							if ($scope.franchises.length == 0) {
 								if (results[i].distance.value/1000 < $scope.maxDistance) {
-									setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]);
+                                    $scope.existingStoreMarkers.push(setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]));
 									$scope.returnPostalCodes.push(franchiseReturnCode + $scope.relevantStoresToSearch[i].code);
 								}
 							}
 							else {
 								if (results[i].distance.value/1000 < $scope.maxDistance && $scope.franchises.indexOf($scope.relevantStoresToSearch[i].franchise) != -1) {
-									setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]);
+								    $scope.existingStoreMarkers.push(setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]));
 									$scope.returnPostalCodes.push(franchiseReturnCode + $scope.relevantStoresToSearch[i].code);
 								}	
 							}
@@ -549,12 +567,123 @@ class appMaps {
 			},
 		}
 
+
 		google.maps.event.trigger($scope.map, 'resize');
 	}
+      change(){
+          console.log("Search text typed in");
+          if (this.searchText === ''){
+            this.showMe = false;
+            return;
+          };
+          if (this.showMe === true){
+            return;
+          };
+          this.showMe = !this.showMe;
+      };
+        addStoreToFavs(){
+          var postalCode = this.searchText;
+            var storeObj = Stores.findOne({"code":postalCode});
+            var storeId = storeObj._id;
+            var storeFran = storeObj.franchise;
+          console.log(storeId);
+          var userId = Meteor.user()._id;
+          var response = addFavStore(postalCode, storeFran,storeId,userId);
+           this.reset();
+        };
+        addItemToFavs(){
+          var itemName = this.searchText;
+            var itemId = Items.findOne({"name":itemName})._id;
+          console.log(itemId);
+          var userId = Meteor.user()._id;
+          var response = addFavItem(itemName,itemId,userId);
+            this.reset();
+        };
+        addToShoppingList(){
+            var itemName = this.searchText;
+            var itemId = Items.findOne({"name":itemName})._id;
+            console.log(itemId);
+            var userId = Meteor.user()._id;
+            addToShoppingList (itemName, itemId, userId);        
+            this.reset();
+        };
+      getPrice () {
+            var itemName = this.searchText;
+            var itemObj = Items.findOne({"name":itemName});
+          var itemId = itemObj._id;
+          var itemdata = itemObj.data;
+          var distance = 10;
+          var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
+            var userLocation = Session.get('location');
+            console.log("USER LOCATION:"+JSON.stringify(userLocation));
+            if (userLocation == undefined || userLocation == null) {
+                alert ("Could not get your location, proceeding globally");
+                userLocation = '';
+            }
+            console.log("getting prices:"+itemId+":"+JSON.stringify(itemdata)+":"+distance+":"+JSON.stringify(franchises)+":"+userLocation);
+          var priceobj = getPrice (itemId, itemdata, distance, franchises, userLocation);
+          var bestPrice = priceobj.price;
+            console.log(priceobj);
+          console.log("BEST PRICE FINAL:"+bestPrice);
+            var position = {
+                lat:priceobj.lat,
+                lng:priceobj.lng
+            };
+		  this.existingStoreMarkers.push(this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position));
+          alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
+      }
+      pageChanged(newPage) {
+        this.page = newPage;
+      };
+
+      sortChanged(sort) {
+        this.sort = sort;
+      };
+      reset () {
+        this.searchText = '';
+        this.showMe = false;
+      };
+      setStoreOnMap(i, franchise, icon, position){
+			console.log("Inside setStoreOnMap function");
+			console.log(franchise + i.toString());
+			var existingStoreMarkerInfo = {
+				id: franchise + i.toString(),
+				latitude: position.lat,
+				longitude: position.lng,
+				icon: icon
+			}
+
+			//this.markers.push(existingStoreMarkerInfo);
+			//$scope.existingStoreMarkers = markers; 
+			return existingStoreMarkerInfo; 
+		};
+	setDestinationIcon(franchise){
+			if(franchise == "Food Basics") {	
+				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FB|008000|FFFF00';
+			}
+			else if (franchise == "Sobeys") {
+				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SB|FFFFFF|000000';
+			}
+			else if (franchise == "Zehrs") {
+				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=ZH|FF6600|000000';
+			}
+			else if (franchise == "FreshCo") {
+				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FC|000000|FFFFFF';
+			}
+			else if (franchise == "NoFrills") {
+				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFFF00|FF0000';
+			}
+			else if (franchise == "Soren") {
+				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SS|ABCD00|FF0000';
+			}
+			else if (franchise == "Conestoga Mall") {
+				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFEE00|FF0000';
+			}
+		}
 }
 
 export default angular.module('appMaps',[
-   'uiGmapgoogle-maps','angular-meteor']) //['uiGmapgoogle-maps', 'angular-meteor']
+   'uiGmapgoogle-maps','angular-meteor',utilsPagination]) //['uiGmapgoogle-maps', 'angular-meteor']
 .component('appMaps',{
 	template,
 	controllerAs: 'appMaps',

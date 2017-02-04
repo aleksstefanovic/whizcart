@@ -1,19 +1,36 @@
+
 <form>
 
 	<div id="map-canvas" > 
 
-		<!--<script id="searchBoxUserLocation.tpl.html" type="text/ng-template">
+		<script id="searchBoxUserLocation.tpl.html" type="text/ng-template">
 			<input type="text" placeholder="User Location">
 		</script>
 
 		<script id="searchBoxFavouriteStores.tpl.html" type="text/ng-template">
 			<input type="text" placeholder="Favourite Stores">
-        </script>-->
+        </script>
 
 		<div ng-repeat="stores in allFranchisesInSmartCart"> 
 			<input type="checkbox" value="{{stores}}" check-list='checked_stores'> {{stores}} 
 		</div>
 		<div> The following stores are checked: {{checked_stores | json}} </div>
+        <br>
+		<div class = "form-group">
+			<input type = "text" ng-model = "appMaps.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "appMaps.change()">
+		</div>
+	<ul ng-show = "appMaps.showMe">
+  		<li ng-repeat="item in appMaps.items">
+            {{item.code}}
+            {{item.franchise}}
+            {{item.name}}
+  		</li>
+	</ul>
+	<button ng-click = "appMaps.addItemToFavs()" class = "btn btn-success"> Add Item to Favourites</button>
+	<button ng-click = "appMaps.addToShoppingList()" class = "btn btn-success"> Add Item to Shopping List</button>
+	<button ng-click = "appMaps.addStoreToFavs()" class = "btn btn-success"> Add Store to Favourites</button>
+	<button ng-click = "appMaps.getPrice()" class = "btn btn-success">Get Best Price</button>
+    <br>
 
 		<!--<label> <input type="checkbox" id="chkBoxFoodBasics" checked="true"> Food Basics </label> <br>
 		<label> <input type="checkbox" id="chkBoxSobeys" checked="true"> Sobeys </label> <br>
@@ -26,6 +43,7 @@
         <p> Max Distance: {{maxDistance}}</p>-->
 
 		<div>
+            <br>
 			<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
 
 				<ui-gmap-markers  models="favStoreMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true"> 

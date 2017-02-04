@@ -13,7 +13,7 @@ import getPrice from '../../../../scripts/getPrice.js';
 
 class ItemAdd {
 
-      constructor($scope, $reactive) {
+      /*constructor($scope, $reactive) {
         'ngInject';
 
         $reactive(this).attach($scope);
@@ -27,11 +27,6 @@ class ItemAdd {
           code: 1
         };
         this.searchText = '';
-        /*this.subscribe('items', () => [{
-          limit: parseInt(this.perPage),
-          skip: parseInt((this.getReactively('page') - 1) * this.perPage),
-          sort: this.getReactively('sort')}
-        ]);*/
         this.showMe = false;
         this.helpers(
           {
@@ -58,8 +53,8 @@ class ItemAdd {
             itemsCount() {return Counts.get('numberOfItems');}
           }
         );
-	};
-  change(){
+	};*/
+  /*change(){
       console.log("Search text typed in");
       if (this.searchText === ''){
         this.showMe = false;
@@ -125,7 +120,7 @@ class ItemAdd {
   reset () {
     this.searchText = '';
 	this.showMe = false;
-  };
+  };*/
 }
 
 const name = 'itemAdd';
