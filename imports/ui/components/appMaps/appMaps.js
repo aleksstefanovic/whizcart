@@ -90,9 +90,9 @@ class appMaps {
 				console.log("nothing added!");
 				var franchiseReturnCode = setFranchiseReturnCode(removed);
 
-				for (i = $scope.existingStoreMarkers.length - 1; i >= 0; i--) {
-					if ($scope.existingStoreMarkers[i].id.includes(franchiseReturnCode)){
-						$scope.existingStoreMarkers.splice(i,1);
+				for (i = this.existingStoreMarkers.length - 1; i >= 0; i--) {
+					if (this.existingStoreMarkers[i].id.includes(franchiseReturnCode)){
+						this.existingStoreMarkers.splice(i,1);
 					}
 				}
 				$scope.$apply();
@@ -105,7 +105,8 @@ class appMaps {
 		var scrollTimer; 
 		$scope.favStoreMarkers = [];
 		$scope.userLocationMarker = [];
-		$scope.existingStoreMarkers = [];
+		//$scope.existingStoreMarkers = [];
+		this.existingStoreMarkers = [];
 		$scope.myTravelMode = "DRIVING";
 		$scope.mapBounds;
 		$scope.neBounds;
@@ -264,7 +265,7 @@ class appMaps {
 		}
 
 		function arrayRemove(array, item){
-			console.log($scope.existingStoreMarkers);
+			console.log(this.existingStoreMarkers);
 			var i;
 			var index = array.indexOf(item);
 			if(index !=-1){
@@ -272,9 +273,9 @@ class appMaps {
 			}
 			var franchiseReturnCode = setFranchiseReturnCode(item);
 
-			for (i = $scope.existingStoreMarkers.length - 1; i >= 0; i--) {
-				if ($scope.existingStoreMarkers[i].id.includes(franchiseReturnCode)){
-					$scope.existingStoreMarkers.splice(i,1);
+			for (i = this.existingStoreMarkers.length - 1; i >= 0; i--) {
+				if (this.existingStoreMarkers[i].id.includes(franchiseReturnCode)){
+					this.existingStoreMarkers.splice(i,1);
 				}
 			}
 			$scope.$apply();
@@ -325,7 +326,7 @@ class appMaps {
 		function postalCodeChanged(searchbox){
 			$scope.favStoreMarkers.length = 0;  	
 			$scope.userLocationMarker.length = 0;
-			$scope.existingStoreMarkers.length = 0;
+			this.existingStoreMarkers.length = 0;
 			$scope.returnPostalCodes = []; 
 			if ($scope.activeModel){
 				$scope.activeModel.show = false;
@@ -406,13 +407,13 @@ class appMaps {
 
 							if ($scope.franchises.length == 0) {
 								if (results[i].distance.value/1000 < $scope.maxDistance) {
-                                    $scope.existingStoreMarkers.push(setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]));
+                                    this.existingStoreMarkers.push(setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]));
 									$scope.returnPostalCodes.push(franchiseReturnCode + $scope.relevantStoresToSearch[i].code);
 								}
 							}
 							else {
 								if (results[i].distance.value/1000 < $scope.maxDistance && $scope.franchises.indexOf($scope.relevantStoresToSearch[i].franchise) != -1) {
-								    $scope.existingStoreMarkers.push(setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]));
+								    this.existingStoreMarkers.push(setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]));
 									$scope.returnPostalCodes.push(franchiseReturnCode + $scope.relevantStoresToSearch[i].code);
 								}	
 							}
@@ -631,7 +632,7 @@ class appMaps {
             };
 		  this.existingStoreMarkers.push(this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position));
           alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
-      }
+      };
       pageChanged(newPage) {
         this.page = newPage;
       };
