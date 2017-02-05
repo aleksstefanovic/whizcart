@@ -154,12 +154,14 @@ class appMaps {
 					console.log("Mouse left map!");
 					$scope.map.options.scrollwheel = false;
 					console.log($scope.map.options.scrollwheel);
-					console.log($scope.existingStoreMarkers);
+					//console.log($scope.markers);
+					//console.log($scope.existingStoreMarkers);
 				},
 
 				bounds_changed: function(map) {
 					console.log("Map bounds_Changed event fired!");
-					console.log($scope.existingStoreMarkers);
+					//console.log($scope.markers);
+					//console.log($scope.existingStoreMarkers);
 
 					$scope.bounds = map.getBounds();
 					$scope.ne = $scope.bounds.getNorthEast();
@@ -321,9 +323,9 @@ class appMaps {
 
 
 		function postalCodeChanged(searchbox){
-			$scope.favStoreMarkers.length = 0;  	
+			//$scope.favStoreMarkers.length = 0;  	
 			$scope.userLocationMarker.length = 0;
-			$scope.existingStoreMarkers.length = 0;
+			//$scope.existingStoreMarkers.length = 0;
 			$scope.returnPostalCodes = []; 
 			if ($scope.activeModel){
 				$scope.activeModel.show = false;
@@ -465,7 +467,6 @@ class appMaps {
 					console.log("Inside Favourite Stores places changed event");
 					$scope.$apply(); // This applies the options.bounds settings to the searchbox
 
-					$scope.userLocationMarker.length = 0;
 					$scope.favStoreMarkers.length = 0; // Erases all favourite stores markers on the map 
 					$scope.exitingStoreMarkers = 0; // TEMPORARY
 
@@ -622,7 +623,7 @@ class appMaps {
 		var priceobj = getPrice (itemId, itemdata, distance, franchises, userLocation);
 		var bestPrice = priceobj.price;
 		console.log(priceobj);
-		console.log("BEST PRICE FINAL:"+bestPrice);
+		console.log("BEST PRICE FINAL:"+ bestPrice);
 		var position = {
 			lat: priceobj.lat,
 			lng: priceobj.lng
@@ -632,8 +633,16 @@ class appMaps {
 
 		console.log("This.scope", this.scope);
 
+		this.scope.favStoreMarkers.length = 0;  	
+		this.scope.existingStoreMarkers.length = 0;
 		this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position);
-		this.scope.markers = this.scope.existingstoreMarkers;
+		
+		console.log("FROM GETPRICE, THIS.USERLOCATIONMARKER");
+		console.log(this.scope.userLocationMarker);
+
+		this.scope.markers.push(this.scope.userLocationMarker[0]);
+		console.log("FROM GETPRICE, THIS.SCOPE.MARKERS:");
+		console.log(this.scope.markers);
 		alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
 	};
 	pageChanged(newPage) {
@@ -657,92 +666,92 @@ class appMaps {
 			icon: icon
 		}
 
-			this.scope.markers.push(existingStoreMarkerInfo);
-			this.scope.existingStoreMarkers = this.scope.markers; 
-			return existingStoreMarkerInfo; 
-		};
-		setDestinationIcon(franchise){
-			if(franchise == "Food Basics") {	
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FB|008000|FFFF00';
-			}
-			else if (franchise == "Sobeys") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SB|FFFFFF|000000';
-			}
-			else if (franchise == "Zehrs") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=ZH|FF6600|000000';
-			}
-			else if (franchise == "FreshCo") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FC|000000|FFFFFF';
-			}
-			else if (franchise == "NoFrills") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFFF00|FF0000';
-			}
-			else if (franchise == "Soren") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SS|ABCD00|FF0000';
-			}
-			else if (franchise == "Conestoga Mall") {
-				return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFEE00|FF0000';
-			}
+		this.scope.markers.push(existingStoreMarkerInfo);
+		this.scope.existingStoreMarkers = this.scope.markers; 
+		return existingStoreMarkerInfo; 
+	};
+	setDestinationIcon(franchise){
+		if(franchise == "Food Basics") {	
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FB|008000|FFFF00';
+		}
+		else if (franchise == "Sobeys") {
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SB|FFFFFF|000000';
+		}
+		else if (franchise == "Zehrs") {
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=ZH|FF6600|000000';
+		}
+		else if (franchise == "FreshCo") {
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=FC|000000|FFFFFF';
+		}
+		else if (franchise == "NoFrills") {
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFFF00|FF0000';
+		}
+		else if (franchise == "Soren") {
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SS|ABCD00|FF0000';
+		}
+		else if (franchise == "Conestoga Mall") {
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFEE00|FF0000';
 		}
 	}
+}
 
-	export default angular.module('appMaps',[
+export default angular.module('appMaps',[
    'uiGmapgoogle-maps','angular-meteor',utilsPagination]) //['uiGmapgoogle-maps', 'angular-meteor']
-	.component('appMaps',{
-		template,
-		controllerAs: 'appMaps',
-		controller: appMaps
-	})
-	.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
-		'ngInject';
-		GoogleMapApi.configure({
-			key: 'AIzaSyDh0l5cQZ7pbUBfKCwviFH-P9KAffzhFzo',	
-			libraries: 'places'
-		});
-	}])
-	.config(config)
-	.directive('checkList', function(){
-		return {
-			scope: {
-				list: '=checkList',
-				value: '@'
-			},
-			link: function(scope, elem, attrs){
-				var handler = function(setup){
-					var checked = elem.prop('checked');
-					var index = scope.list.indexOf(scope.value);
+.component('appMaps',{
+	template,
+	controllerAs: 'appMaps',
+	controller: appMaps
+})
+.config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
+	'ngInject';
+	GoogleMapApi.configure({
+		key: 'AIzaSyDh0l5cQZ7pbUBfKCwviFH-P9KAffzhFzo',	
+		libraries: 'places'
+	});
+}])
+.config(config)
+.directive('checkList', function(){
+	return {
+		scope: {
+			list: '=checkList',
+			value: '@'
+		},
+		link: function(scope, elem, attrs){
+			var handler = function(setup){
+				var checked = elem.prop('checked');
+				var index = scope.list.indexOf(scope.value);
 
-					if (checked && index == -1){
-						if (setup) elem.prop('checked', false);
-						else scope.list.push(scope.value);
-					} else if (!checked && index != -1){
-						if (setup) elem.prop('checked', true);
-						else scope.list.splice(index, 1);
-					}
-				};
+				if (checked && index == -1){
+					if (setup) elem.prop('checked', false);
+					else scope.list.push(scope.value);
+				} else if (!checked && index != -1){
+					if (setup) elem.prop('checked', true);
+					else scope.list.splice(index, 1);
+				}
+			};
 
-				var setupHandler = handler.bind(null,true);
-				var changeHandler = handler.bind(null, false);
+			var setupHandler = handler.bind(null,true);
+			var changeHandler = handler.bind(null, false);
 
-				elem.on('change', function(){
-					scope.$apply(changeHandler);
-				});
-				scope.$watch('list', setupHandler, true);
-			}
-		};
-	})
-	.run(['$templateCache', function ($templateCache) {
-		$templateCache.put('searchBoxUserLocation.tpl.html', '<input id="pac-input" type="text" ng-model="ngModel" placeholder = "userLocation">');
-	}]);
-
-	function config($stateProvider) {
-		'ngInject';
-
-		$stateProvider.state('appMaps', {
-			url: '/appMaps',
-			template: '<app-maps></app-maps>',
-		});
+			elem.on('change', function(){
+				scope.$apply(changeHandler);
+			});
+			scope.$watch('list', setupHandler, true);
+		}
 	};
+})
+.run(['$templateCache', function ($templateCache) {
+	$templateCache.put('searchBoxUserLocation.tpl.html', '<input id="pac-input" type="text" ng-model="ngModel" placeholder = "userLocation">');
+}]);
+
+function config($stateProvider) {
+	'ngInject';
+
+	$stateProvider.state('appMaps', {
+		url: '/appMaps',
+		template: '<app-maps></app-maps>',
+	});
+};
 
 
 
