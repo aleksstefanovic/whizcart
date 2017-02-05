@@ -183,7 +183,6 @@ class appMaps {
 		};
 
 		$('.angular-google-map-container').click(function(){
-			console.log("Map clicked!")
 			$scope.map.options.scrollwheel = true;
 			console.log($scope.map.options.scrollwheel);
 		})
@@ -360,8 +359,24 @@ class appMaps {
 
 				markers.push(userLocationMarkerInfo);
 				$scope.userLocationMarker = markers;
+				//$scope.existingStoreMarkers = $scope.markers;
+				$scope.markers.push($scope.userLocationMarker[0]);
+				
 
-				$scope.markersArray = [];
+				/*console.log("364: SCOPE.MARKERS");
+				console.log($scope.markers);
+
+				console.log($scope.userLocationMarker);*/
+
+
+				console.log($scope.existingStoreMarkers);
+
+				console.log("375: SCOPE.MARKERS");
+				console.log($scope.markers);
+
+				console.log($scope.existingStoreMarkers);
+
+
 				$scope.roughLatDifference = 0.01 * $scope.maxDistance;
 				$scope.roughLngDifference = $scope.maxDistance/(Math.cos((Math.abs($scope.userLocation.lat)*Math.PI/180)) * 111); 
 				console.log("ROUGH LAT DIFFERENCE: " + $scope.roughLatDifference);
@@ -477,6 +492,7 @@ class appMaps {
 						return;
 					} else {
 						console.log("Inside favourite stores function!");
+						console.log($scope.places);
 
 						$scope.favouriteStoresCount = 0;
 
@@ -637,12 +653,12 @@ class appMaps {
 		this.scope.existingStoreMarkers.length = 0;
 		this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position);
 		
-		console.log("FROM GETPRICE, THIS.USERLOCATIONMARKER");
-		console.log(this.scope.userLocationMarker);
+		//console.log("FROM GETPRICE, THIS.USERLOCATIONMARKER");
+		//console.log(this.scope.userLocationMarker);
 
 		this.scope.markers.push(this.scope.userLocationMarker[0]);
-		console.log("FROM GETPRICE, THIS.SCOPE.MARKERS:");
-		console.log(this.scope.markers);
+		//console.log("FROM GETPRICE, THIS.SCOPE.MARKERS:");
+		//console.log(this.scope.markers);
 		alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
 	};
 	pageChanged(newPage) {
