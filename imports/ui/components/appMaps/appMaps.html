@@ -7,7 +7,7 @@
 			<input type="text" placeholder="User Location">
 		</script>
 
-		<script id="searchBoxFavouriteStores.tpl.html" type="text/ng-template">
+		<script id="mapSearchBox.tpl.html" type="text/ng-template">
 			<input type="text" placeholder="Favourite Stores">
 		</script>
 
@@ -34,13 +34,6 @@
 		<button ng-click = "appMaps.getPrice()" class = "btn btn-success">Get Best Price</button>
 		<br>
 
-		<!--<label> <input type="checkbox" id="chkBoxFoodBasics" checked="true"> Food Basics </label> <br>
-		<label> <input type="checkbox" id="chkBoxSobeys" checked="true"> Sobeys </label> <br>
-		<label> <input type="checkbox" id="chkBoxZehrs" checked="true"> Zehrs </label> <br>
-		<label> <input type="checkbox" id="chkBoxFreshCo" checked="true"> FreshCo </label> <br>
-		<label> <input type="checkbox" id="chkBoxNoFrills" checked="true"> No Frills </label> <br>
-		<label> <input type="checkbox" id="chkBoxSoren" checked="true"> Soren </label> <br>--> 
-
 		<input id="maxDistance" type="text" class="controls" placeholder="Max Distance (km)" ng-model="maxDistance" ng-change=maxDistanceChanged()>
 		<p> Max Distance: {{maxDistance}}</p>
 
@@ -48,7 +41,7 @@
 			<br>
 			<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
 
-				<ui-gmap-markers  models="favStoreMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true"> 
+				<ui-gmap-markers  models="mapMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true"> 
 					<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show" ng-cloak>
 						<p> <strong> Name: {{fullName}} </strong> </br> 
 							{{fullAddress}} </br>
@@ -58,12 +51,12 @@
 					</ui-gmap-window>
 				</ui-gmap-markers>
 
-				<ui-gmap-markers models="userLocationMarker" coords="'self'" icon="'icon'" fit="true"> </ui-gmap-markers>
-				<ui-gmap-markers models="existingStoreMarkers" coords="'self'" icon="'icon'" fit="true"></ui-gmap-markers>
+				<!--<ui-gmap-markers models="userLocationMarker" coords="'self'" icon="'icon'" fit="true"> </ui-gmap-markers>
+				<ui-gmap-markers models="existingStoreMarkers" coords="'self'" icon="'icon'" fit="true"></ui-gmap-markers>-->
 
 				<ui-gmap-search-box options="searchBoxUserLocation.options" template="searchBoxUserLocation.template" events="searchBoxUserLocation.events" ng-model="searchModel.searchTerm"></ui-gmap-search-box>
 
-				<ui-gmap-search-box options="searchBoxFavouriteStores.options" template="searchBoxFavouriteStores.template" events="searchBoxFavouriteStores.events" bounds="searchBoxFavouriteStores.bounds" ></ui-gmap-search-box> 
+				<ui-gmap-search-box options="mapSearchBox.options" template="mapSearchBox.template" events="mapSearchBox.events" bounds="mapSearchBox.bounds" ></ui-gmap-search-box> 
 			</ui-gmap-google-map>
 		</div>
 	</div>

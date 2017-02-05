@@ -97,8 +97,7 @@ class appMaps {
 		var lastOpenInfoWindow; 
 		var oldPlace = null; 
 		var scrollTimer; 
-		$scope.favStoreMarkers = [];
-		$scope.userLocationMarker = [];
+		$scope.mapMarkers = [];
 		//$scope.existingStoreMarkers = [];
 		$scope.existingStoreMarkers = [];
 		$scope.myTravelMode = "DRIVING";
@@ -151,10 +150,10 @@ class appMaps {
 				},	*/
 
 				mouseout: function(map){
-					console.log("Mouse left map!");
+					//console.log("Mouse left map!");
 					$scope.map.options.scrollwheel = false;
-					console.log($scope.map.options.scrollwheel);
-					//console.log($scope.markers);
+					//console.log($scope.map.options.scrollwheel);
+					console.log($scope.mapMarkers);
 					//console.log($scope.existingStoreMarkers);
 				},
 
@@ -166,7 +165,7 @@ class appMaps {
 					$scope.bounds = map.getBounds();
 					$scope.ne = $scope.bounds.getNorthEast();
 					$scope.sw = $scope.bounds.getSouthWest();
-					$scope.searchBoxFavouriteStores.options.bounds = new google.maps.LatLngBounds($scope.sw, $scope.ne);
+					$scope.mapSearchBox.options.bounds = new google.maps.LatLngBounds($scope.sw, $scope.ne);
 
 					$scope.map.center = map.getCenter() // To allow the user to drag the map without being forced back to their location
 
@@ -218,10 +217,11 @@ class appMaps {
 			}	
 
 			markers.push(userLocationMarkerInfo);
-			$scope.userLocationMarker = markers;
+			$scope.mapMarkers = markers;
 
 			$scope.$apply();
 		}
+
 		function noUserLocationHTML5(error){
 			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
 		}
@@ -262,7 +262,7 @@ class appMaps {
 			console.log("Check box changed!");
 		}
 
-		function arrayRemove(array, item){
+		/*function arrayRemove(array, item){
 			console.log($scope.existingStoreMarkers);
 			var i;
 			var index = array.indexOf(item);
@@ -271,13 +271,13 @@ class appMaps {
 			}
 			var franchiseReturnCode = setFranchiseReturnCode(item);
 
-			for (i = $scope.existingStoreMarkers.length - 1; i >= 0; i--) {
-				if ($scope.existingStoreMarkers[i].id.includes(franchiseReturnCode)){
+			for (i = $scope.mapMarkers.length - 1; i >= 0; i--) {
+				if ($scope.mapMarker[i].id.includes(franchiseReturnCode)){
 					$scope.existingStoreMarkers.splice(i,1);
 				}
 			}
 			$scope.$apply();
-		}
+		}*/
 
 		function populateDestinationArray(relevantStoresToSearch, destArray){
 			for (var i = 0; i < relevantStoresToSearch.length; i++){
@@ -322,9 +322,15 @@ class appMaps {
 
 
 		function postalCodeChanged(searchbox){
-			//$scope.favStoreMarkers.length = 0;  	
-			$scope.userLocationMarker.length = 0;
-			//$scope.existingStoreMarkers.length = 0;
+
+			console.log($scope.mapMarkers);
+			for(index in $scope.mapMarkers)
+			{
+				if ($scope.mapMarkers[index].id == "userLocationMarker"){
+					$scope.mapMarkers.splice(index,1);
+				}
+			}
+
 			$scope.returnPostalCodes = []; 
 			if ($scope.activeModel){
 				$scope.activeModel.show = false;
@@ -357,25 +363,10 @@ class appMaps {
 					icon: 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=0|FFFF00|000000'
 				}	
 
-				markers.push(userLocationMarkerInfo);
-				$scope.userLocationMarker = markers;
-				//$scope.existingStoreMarkers = $scope.markers;
-				$scope.markers.push($scope.userLocationMarker[0]);
-				
+				$scope.mapMarkers.push(userLocationMarkerInfo);
 
-				/*console.log("364: SCOPE.MARKERS");
-				console.log($scope.markers);
-
-				console.log($scope.userLocationMarker);*/
-
-
-				console.log($scope.existingStoreMarkers);
-
-				console.log("375: SCOPE.MARKERS");
-				console.log($scope.markers);
-
-				console.log($scope.existingStoreMarkers);
-
+				/*console.log("LINE 368");
+				console.log($scope.mapMarkers);
 
 				$scope.roughLatDifference = 0.01 * $scope.maxDistance;
 				$scope.roughLngDifference = $scope.maxDistance/(Math.cos((Math.abs($scope.userLocation.lat)*Math.PI/180)) * 111); 
@@ -435,9 +426,9 @@ class appMaps {
 					}
 					$scope.$apply();
 					console.log($scope.returnPostalCodes);
-				});
+				});*/
 
-				oldPlace = $scope.places[0].name
+				//oldPlace = $scope.places[0].names
 			}
 		}
 
@@ -472,8 +463,8 @@ class appMaps {
 			},
 		}
 
-		$scope.searchBoxFavouriteStores = {
-			template: 'searchBoxFavouriteStores.tpl.html',
+		$scope.mapSearchBox = {
+			template: 'mapSearchBox.tpl.html',
 			options: {
 				bounds: new google.maps.LatLngBounds($scope.swBounds, $scope.neBounds),
 			},
@@ -482,8 +473,12 @@ class appMaps {
 					console.log("Inside Favourite Stores places changed event");
 					$scope.$apply(); // This applies the options.bounds settings to the searchbox
 
-					$scope.favStoreMarkers.length = 0; // Erases all favourite stores markers on the map 
-					$scope.exitingStoreMarkers = 0; // TEMPORARY
+					for(index in $scope.mapMarkers)
+					{
+						if ($scope.mapMarkers[index].id != "userLocationMarker"){
+							$scope.mapMarkers.splice(index,1);
+						}
+					}
 
 					$scope.places = searchbox.getPlaces();
 
@@ -515,10 +510,10 @@ class appMaps {
 						$scope.places.forEach(function(place){
 							console.log("inside $scope.places.forEach");
 
-							$scope.favStoreMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng()));
+							$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng()));
 
-							$scope.markers = $scope.favStoreMarkers; 
-
+							$scope.markers = $scope.mapMarkers; 
+							/*
 							$scope.onClick = function(marker, eventName, model) {
 
 								console.log("Marker Clicked!");
@@ -571,12 +566,12 @@ class appMaps {
 								model.show = !model.show;
 								$scope.activeModel = model;
 								console.log($scope.activeModel.show);
-							};
+							};*/
 
 							$scope.favouriteStoresCount += 1;
 						});
 
-						console.log($scope.favStoreMarkers);
+						console.log($scope.mapMarkers);
 					}
 				}
 			},
@@ -649,7 +644,7 @@ class appMaps {
 
 		console.log("This.scope", this.scope);
 
-		this.scope.favStoreMarkers.length = 0;  	
+		this.scope.mapMarkers.length = 0;  	
 		this.scope.existingStoreMarkers.length = 0;
 		this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position);
 		
