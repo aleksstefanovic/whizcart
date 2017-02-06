@@ -488,7 +488,6 @@ class appMaps {
 					$scope.places = searchbox.getPlaces();
 
 					if($scope.places.length == 0){
-						alert("No store by that name found!")
 						return;
 					} else {
 						console.log("Inside favourite stores function!");
@@ -515,20 +514,30 @@ class appMaps {
 						$scope.places.forEach(function(place){
 							console.log("inside $scope.places.forEach");
 							console.log(place);
-							console.log("BATMAN");
 
 							if (place.types.indexOf("grocery_or_supermarket") == -1){
-								alert("REJECTED: " + place.name);
 								return;
 							}
 
-							alert("Approved: " + place.name);
+							$scope.fullName = place.name;
+							$scope.fullAddress = place.formatted_address;
+							console.log($scope.fullAddress);
+							var lastCommaIndex = $scope.fullAddress.lastIndexOf(",");
+							$scope.postalCode = $scope.fullAddress.substr(lastCommaIndex-7,7);
+							$scope.postalCode = $scope.postalCode.replace(/\s+/g,'');
+							console.log($scope.postalCode);
 
+							if (Stores.findOne({"code": $scope.postalCode}) == null)
+							{
+								return; 
+							}
 
 							$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng()));
-
 							$scope.markers = $scope.mapMarkers; 
-							
+
+
+
+
 							/*$scope.onClick = function(marker, eventName, model) {
 
 								console.log("Marker Clicked!");
@@ -659,14 +668,20 @@ class appMaps {
 
 		console.log("This.scope", this.scope);
 
-		this.scope.mapMarkers.length = 0;  	
-		this.scope.existingStoreMarkers.length = 0;
+		this.scope.mapMarkers.forEach(function (marker) {
+			if (marker.id == "userLocationMarker"){ 
+				user = marker;
+				return;
+			}
+		});
+		this.scope.mapMarkers = [user];
+
+
 		this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position);
-		
+
 		//console.log("FROM GETPRICE, THIS.USERLOCATIONMARKER");
 		//console.log(this.scope.userLocationMarker);
 
-		this.scope.markers.push(this.scope.userLocationMarker[0]);
 		//console.log("FROM GETPRICE, THIS.SCOPE.MARKERS:");
 		//console.log(this.scope.markers);
 		alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
@@ -689,11 +704,10 @@ class appMaps {
 			id: franchise + i.toString(),
 			latitude: position.lat,
 			longitude: position.lng,
-			icon: icon
+			icon: destinationIcon
 		}
 
-		this.scope.markers.push(existingStoreMarkerInfo);
-		this.scope.existingStoreMarkers = this.scope.markers; 
+		this.scope.mapMarkers.push(existingStoreMarkerInfo);
 		return existingStoreMarkerInfo; 
 	};
 	setDestinationIcon(franchise){
