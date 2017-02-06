@@ -473,21 +473,26 @@ class appMaps {
 					console.log("Inside Favourite Stores places changed event");
 					$scope.$apply(); // This applies the options.bounds settings to the searchbox
 
-					for(index in $scope.mapMarkers)
-					{
-						if ($scope.mapMarkers[index].id != "userLocationMarker"){
-							$scope.mapMarkers.splice(index,1);
+					var user;
+					//alert("SCOPE.MARKERS IS THIS LONG: " + $scope.mapMarkers.length);
+					$scope.mapMarkers.forEach(function (marker) {
+						if (marker.id == "userLocationMarker"){ 
+							//alert("CLEARING OLD STORE MARKER");
+							//$scope.mapMarkers.splice($scope.mapMarkers.indexOf(marker),1);
+							user = marker;
+							return;
 						}
-					}
+					});
+					$scope.mapMarkers = [user];
 
 					$scope.places = searchbox.getPlaces();
 
 					if($scope.places.length == 0){
-						console.log("No store by that name found!")
+						alert("No store by that name found!")
 						return;
 					} else {
 						console.log("Inside favourite stores function!");
-						console.log($scope.places);
+
 
 						$scope.favouriteStoresCount = 0;
 
@@ -509,12 +514,22 @@ class appMaps {
 
 						$scope.places.forEach(function(place){
 							console.log("inside $scope.places.forEach");
+							console.log(place);
+							console.log("BATMAN");
+
+							if (place.types.indexOf("grocery_or_supermarket") == -1){
+								alert("REJECTED: " + place.name);
+								return;
+							}
+
+							alert("Approved: " + place.name);
+
 
 							$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng()));
 
 							$scope.markers = $scope.mapMarkers; 
-							/*
-							$scope.onClick = function(marker, eventName, model) {
+							
+							/*$scope.onClick = function(marker, eventName, model) {
 
 								console.log("Marker Clicked!");
 								$scope.fullName = $scope.places[marker.key].name;
@@ -566,10 +581,10 @@ class appMaps {
 								model.show = !model.show;
 								$scope.activeModel = model;
 								console.log($scope.activeModel.show);
-							};*/
+							}; */ 
 
 							$scope.favouriteStoresCount += 1;
-						});
+						})
 
 						console.log($scope.mapMarkers);
 					}
