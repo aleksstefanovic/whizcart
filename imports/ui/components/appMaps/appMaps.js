@@ -704,7 +704,7 @@ class appMaps {
 			id: franchise + i.toString(),
 			latitude: position.lat,
 			longitude: position.lng,
-			icon: destinationIcon
+			icon: icon
 		}
 
 		this.scope.mapMarkers.push(existingStoreMarkerInfo);
