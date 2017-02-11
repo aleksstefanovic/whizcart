@@ -98,7 +98,6 @@ class appMaps {
 		var oldPlace = null; 
 		var scrollTimer; 
 		$scope.mapMarkers = [];
-		//$scope.existingStoreMarkers = [];
 		$scope.existingStoreMarkers = [];
 		$scope.myTravelMode = "DRIVING";
 		$scope.mapBounds;
@@ -128,6 +127,7 @@ class appMaps {
 				click: function(marker, eventName, model, arguments){
 					$scope.map.window.model = model;
 					$scope.map.window.show = true;
+					console.log("CLICKED ON A MARKER BRO ");	
 				}
 			},
 			window: {
@@ -261,23 +261,6 @@ class appMaps {
 		$scope.chkBoxChanged = function(){
 			console.log("Check box changed!");
 		}
-
-		/*function arrayRemove(array, item){
-			console.log($scope.existingStoreMarkers);
-			var i;
-			var index = array.indexOf(item);
-			if(index !=-1){
-				array.splice(index,1);
-			}
-			var franchiseReturnCode = setFranchiseReturnCode(item);
-
-			for (i = $scope.mapMarkers.length - 1; i >= 0; i--) {
-				if ($scope.mapMarker[i].id.includes(franchiseReturnCode)){
-					$scope.existingStoreMarkers.splice(i,1);
-				}
-			}
-			$scope.$apply();
-		}*/
 
 		function populateDestinationArray(relevantStoresToSearch, destArray){
 			for (var i = 0; i < relevantStoresToSearch.length; i++){
@@ -495,7 +478,7 @@ class appMaps {
 
 						$scope.favouriteStoresCount = 0;
 
-						var createFavStoreMarker = function (i,bounds, lat, lng, idKey){
+						var createFavStoreMarker = function (i,bounds, lat, lng, idKey, postalCode, fullName, fullAddress){
 							if (idKey == null){
 								idKey = "id";
 							}
@@ -505,11 +488,51 @@ class appMaps {
 							var ret = {
 								latitude: latitude, 
 								longitude: longitude, 
-								title: 'm' + i
+								title: postalCode + "_" + i,
+								postalCode: postalCode,
+								fullName: fullName, 
+								fullAddress: fullAddress
 							};
 							ret[idKey] = i;
 							return ret;
 						};
+
+						$scope.onClick = function(marker, eventName, model) {
+
+							console.log("Marker Clicked!");
+							console.log(marker.key);
+							var lng, lat;
+
+							$scope.mapMarkers.forEach(function(mapMarker) {
+								if (marker.key == mapMarker.id) {
+									$scope.fullName = mapMarker.fullName;
+									$scope.fullAddress = mapMarker.fullAddress;
+									$scope.postalCode = mapMarker.postalCode;
+									lat = mapMarker.latitude;
+									lng = mapMarker.longitude;
+									return;
+								}
+							});
+
+							console.log($scope.mapMarkers)
+
+							$scope.favouritesButtonClicked = function() {
+								console.log("FavouritesButtonClicked!",$scope.postalCode);
+								var postalCode = $scope.postalCode;
+								alert(postalCode);
+								var storeObj = Stores.findOne({"code":postalCode});
+
+								var storeId = storeObj._id;
+								var storeFran = storeObj.franchise;
+								console.log(storeId);
+								var userId = Meteor.user()._id;
+								var response = addFavStore(postalCode, storeFran,storeId,userId);
+							}
+
+							model.show = !model.show;
+							$scope.activeModel = model;
+							console.log($scope.activeModel.show);
+						};  
 
 						$scope.places.forEach(function(place){
 							console.log("inside $scope.places.forEach");
@@ -527,70 +550,23 @@ class appMaps {
 							$scope.postalCode = $scope.postalCode.replace(/\s+/g,'');
 							console.log($scope.postalCode);
 
-							if (Stores.findOne({"code": $scope.postalCode}) == null)
+							var result = Stores.findOne({"code": $scope.postalCode});
+							alert(result + $scope.postalCode);
+							if ( result == null || result == undefined)
 							{
 								return; 
-							}
+							} 
 
-							$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng()));
+							alert("Made it past the return for: " + $scope.postalCode + JSON.stringify($scope.mapMarkers));
+
+							$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng(), null, $scope.postalCode, place.name, place.formatted_address));
+							$scope.markers = [];
 							$scope.markers = $scope.mapMarkers; 
 
+							console.log("mapMarkers: ", $scope.mapMarkers);
+							console.log("markers: ", $scope.markers);
 
 
-
-							/*$scope.onClick = function(marker, eventName, model) {
-
-								console.log("Marker Clicked!");
-								$scope.fullName = $scope.places[marker.key].name;
-								$scope.fullAddress = $scope.places[marker.key].formatted_address;
-								console.log($scope.fullAddress);
-								var lastCommaIndex = $scope.fullAddress.lastIndexOf(",");
-								$scope.postalCode = $scope.fullAddress.substr(lastCommaIndex-7,7);
-								$scope.postalCode = $scope.postalCode.replace(/\s+/g,'');
-
-								var lat = $scope.places[marker.key].geometry.location.lat();
-								var lng = $scope.places[marker.key].geometry.location.lng();
-
-								$scope.favouritesButtonClicked = function() {
-									console.log("FavouritesButtonClicked!",$scope.postalCode);
-									var postalCode = $scope.postalCode;
-									var storeObj = Stores.findOne({"code":postalCode});
-									var storeId = storeObj._id;
-									var storeFran = storeObj.franchise;
-									console.log(storeId);
-									var userId = Meteor.user()._id;
-									var response = addFavStore(postalCode, storeFran,storeId,userId);
-								}
-
-								$scope.databaseButtonClicked = function() {
-									console.log("DatabaseButtonClicked!");
-									var postalCode = $scope.postalCode;
-									console.log($scope.fullName);
-									var franchise = $scope.fullName;
-									if (franchise.includes("Zehrs")){
-										franchise = "Zehrs";
-									} else if (franchise.includes("No Frills")){ 
-										franchise = "NoFrills";	
-									} else if (franchise.includes("Fresh Co")) {
-										franchise = "FreshCo";
-									}
-
-									Stores.insert(
-									{
-										"code":postalCode,
-										"franchise":franchise,
-										"address":$scope.fullAddress,
-										"lat":lat,
-										"lng":lng
-									}
-									);
-								}
-
-
-								model.show = !model.show;
-								$scope.activeModel = model;
-								console.log($scope.activeModel.show);
-							}; */ 
 
 							$scope.favouriteStoresCount += 1;
 						})
