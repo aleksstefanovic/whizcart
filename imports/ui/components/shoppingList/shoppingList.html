@@ -5,15 +5,15 @@
 <app-maps ng-if= "shoppingList.isLoggedIn"> </app-maps>
 
 <div style="float: left; position: relative; padding-top: 150px;">
-  <div ng-hide = "shoppingList.isLoggedIn">
+  <div ng-hide = "shoppingList.isLoggedIn" class = "btn btn-success">
     Please Log into FoodHero or Create a New Account!
   </div>
 
-  <button ng-click="shoppingList.showShoppingLists()" ng-show="shoppingList.isLoggedIn"> Display Shopping Lists</button>
+  <button ng-click="shoppingList.showShoppingLists()" ng-show="shoppingList.isLoggedIn" class = "btn btn-success"> Display Shopping Lists</button>
 
-  <button ng-click="shoppingList.showFavStores()" ng-show="shoppingList.isLoggedIn"> Display Fav Stores</button>
+  <button ng-click="shoppingList.showFavStores()" ng-show="shoppingList.isLoggedIn" class = "btn btn-success"> Display Fav Stores</button>
 
-  <button ng-click="shoppingList.showFavItems()" ng-show="shoppingList.isLoggedIn" ng-show="shoppingList.isLoggedIn"> Display Fav Items</button> <!--ng-if="shoppingList.isLoggedIn"-->
+  <button ng-click="shoppingList.showFavItems()" ng-show="shoppingList.isLoggedIn" ng-show="shoppingList.isLoggedIn" class = "btn btn-success"> Display Fav Items</button> <!--ng-if="shoppingList.isLoggedIn"-->
 
   <!--<button ng-click="shoppingList.showMap()" ng-show="shoppingList.isLoggedIn"> Display Map </button>-->
 
