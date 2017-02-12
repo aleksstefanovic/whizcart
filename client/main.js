@@ -1,4 +1,4 @@
 import angular from 'angular';
 import angularMeteor from 'angular-meteor';
-import { name as FoodHero } from '../imports/ui/components/foodHero/foodHero';
+import { name as WhizCart } from '../imports/ui/components/whizcart/whizcart';
 import 'bootstrap/dist/css/bootstrap.css';

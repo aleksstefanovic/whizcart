@@ -4,7 +4,7 @@ import uiRouter from 'angular-ui-router';
 import utilsPagination from 'angular-utils-pagination';
 import template from './mainPage.html';
 import { Items } from '../../../api/items/index';
-import { name as itemAdd } from '../itemAdd/itemAdd';
+import { name as dashboard } from '../dashboard/dashboard';
 import { name as itemRemove } from '../itemRemove/itemRemove';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 import { name as ItemsSort } from '../itemsSort/itemsSort';
@@ -69,7 +69,7 @@ const name = 'mainPage';
 export default angular.module(name, [
   angularMeteor,
   uiRouter,
-  itemAdd,
+  dashboard,
   itemRemove,
   ItemsSort,
   utilsPagination
