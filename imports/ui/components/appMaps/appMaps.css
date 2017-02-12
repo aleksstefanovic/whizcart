@@ -1,11 +1,13 @@
 .angular-google-map-container {
-	position: relative;
+	position: fixed;
 	top: 0;
 	bottom: 0;
 	right: 0;
 	left: 0;
 	height: 800px;
-	width: 1200px;
+	width: 100%;
+	/*height: 60%;
+	width: 60%;*/
 	padding-left: 20px;
 }
 
@@ -17,12 +19,13 @@ html, body{
 }
 
 #map-canvas{
-	position: absolute;
-	float: left
-	height: 2000px;
-	width: 1500px;
-	padding-bottom: 66.67% /* aspect ratio 3:2*/;
-
+	position: relative;
+	float: left;
+	/*height: 50%;
+	width: 50%;*/
+	height: 500px;
+	width: 100%;
+	padding-bottom: 66.67% /* aspect ratio 3:2*/
 }
 
 #distance-inputBox{

@@ -2,24 +2,27 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <item-add ng-show = "shoppingList.isLoggedIn"></item-add>
 
-<div ng-hide = "shoppingList.isLoggedIn">
-  Please Log into FoodHero or Create a New Account!
-</div>
+<app-maps ng-if= "shoppingList.isLoggedIn"> </app-maps>
 
-<button ng-click="shoppingList.showShoppingLists()" ng-show="shoppingList.isLoggedIn"> Display Shopping Lists</button>
+<div style="float: left; position: relative; padding-top: 150px;">
+  <div ng-hide = "shoppingList.isLoggedIn">
+    Please Log into FoodHero or Create a New Account!
+  </div>
 
-<button ng-click="shoppingList.showFavStores()" ng-show="shoppingList.isLoggedIn"> Display Fav Stores</button>
+  <button ng-click="shoppingList.showShoppingLists()" ng-show="shoppingList.isLoggedIn"> Display Shopping Lists</button>
 
-<button ng-click="shoppingList.showFavItems()" ng-show="shoppingList.isLoggedIn" ng-show="shoppingList.isLoggedIn"> Display Fav Items</button> <!--ng-if="shoppingList.isLoggedIn"-->
+  <button ng-click="shoppingList.showFavStores()" ng-show="shoppingList.isLoggedIn"> Display Fav Stores</button>
 
-<!--<button ng-click="shoppingList.showMap()" ng-show="shoppingList.isLoggedIn"> Display Map </button>-->
+  <button ng-click="shoppingList.showFavItems()" ng-show="shoppingList.isLoggedIn" ng-show="shoppingList.isLoggedIn"> Display Fav Items</button> <!--ng-if="shoppingList.isLoggedIn"-->
 
-<div ng-hide = "shoppingList.showMeShoppingLists"> </div>
+  <!--<button ng-click="shoppingList.showMap()" ng-show="shoppingList.isLoggedIn"> Display Map </button>-->
 
-<div ng-show = "shoppingList.showMeShoppingLists">
+  <div ng-hide = "shoppingList.showMeShoppingLists"> </div>
 
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#shoppingList1">Shopping List 1</a></li>
+  <div ng-show = "shoppingList.showMeShoppingLists">
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#shoppingList1">Shopping List 1</a></li>
   <!--<li><a data-toggle="tab" href="#shoppingList2">Shopping List 2</a></li>
   <li><a data-toggle="tab" href="#shoppingList3">Shopping List 3</a></li>-->
 </ul>
@@ -76,5 +79,5 @@
   </li>
 </ul>
 </div>
+</div>
 
-<app-maps ng-if= "shoppingList.isLoggedIn"> </app-maps>
