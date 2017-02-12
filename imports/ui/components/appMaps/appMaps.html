@@ -1,5 +1,62 @@
-
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <form>
+
+<app-maps ng-if= "appMaps.isLoggedIn"> </app-maps>
+
+<div style="float: left; position: relative; padding-top: 150px;">
+  <div ng-hide = "appMaps.isLoggedIn">
+    Please Log into FoodHero or Create a New Account!
+  </div>
+
+  <button ng-click="appMaps.showShoppingLists()" ng-show="appMaps.isLoggedIn" class = "btn btn-success"> Display Shopping Lists</button>
+
+  <button ng-click="appMaps.showFavStores()" ng-show="appMaps.isLoggedIn" class = "btn btn-success"> Display Fav Stores</button>
+
+  <button ng-click="appMaps.showFavItems()" ng-show="appMaps.isLoggedIn" ng-show="appMaps.isLoggedIn" class = "btn btn-success"> Display Fav Items</button>
+
+  <div ng-hide = "appMaps.showMeShoppingLists"> </div>
+
+  <div ng-show = "appMaps.showMeShoppingLists">
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#shoppingList1">Shopping List 1</a></li>
+</ul>
+
+<div class="tab-content">
+  <div id="shoppingList1" class="tab-pane fade in active">
+    <h3>Shopping List 1</h3>
+    <ul>
+     <li ng-repeat="item in appMaps.shoppingList">
+      {{item.name}}
+    </li>
+  </ul>
+</div>
+
+</div>
+
+</div>
+
+<div ng-show = "appMaps.showMeFavStores">
+  <h3>Favourite Stores</h3>
+  <ul>
+   <li ng-repeat="store in appMaps.favStores">
+    {{store.code}}
+    {{store.franchise}}
+  </li>
+</ul>
+</div>
+
+<div ng-show = "appMaps.showMeFavItems">
+  <h3>Favourite Items</h3>
+  <ul>
+   <li ng-repeat="item in appMaps.favItems">
+    {{item.name}}
+  </li>
+</ul>
+</div>
+</div>
+
 	<div style="float: left; margin: 0; width: 1200px">
 		<div id="map-canvas" > 	
 

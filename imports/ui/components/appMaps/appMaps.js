@@ -33,6 +33,19 @@ class appMaps {
 		};
 		this.searchText = '';
 		this.showMe = false;
+
+	    this.favPerPage = 10;
+	    this.favPage = 1;
+	    this.favSort = {
+	      name: 1
+	    };
+	    this.subscribe('stores');
+	    this.subscribe('items');
+	    this.showMeShoppingLists = false;
+	    this.showMeFavStores = false;
+	    this.showMeMap = true;
+	    this.showMeFavItems = false;
+
 		this.helpers(
 		{
 			items() { 
@@ -54,11 +67,72 @@ class appMaps {
 				storeCursor.forEach ( function(store) {
 					result.push(store);
 				});
-        //alert(result);
-        return result;
-    },
-    itemsCount() {return Counts.get('numberOfItems');}
-}
+        	//alert(result);
+        	return result;
+    		},
+    		itemsCount() {
+    			return Counts.get('numberOfItems');
+    		},
+    		favItems() {
+    			return Items.find({}, {sort : this.getReactively('sort')});
+    		},
+        	shoppingList() {
+	            var user = Meteor.user();
+	            if (user == undefined || user.profile == undefined || user.profile.shoppingLists.length == 0) {
+	                return [];
+	            }
+	            var userProfile = user.profile;
+	            var shoppingList = userProfile.shoppingLists[0].items;
+	            var shoppingListData = [];
+	            for (var i in shoppingList) {
+	                var itemObj = Items.findOne({"_id":shoppingList[i]});
+	                if (itemObj != undefined) {
+	                    shoppingListData.push(itemObj);
+	                }
+	            }
+	            return shoppingListData;
+	        },
+	        favStores() {
+	            var user = Meteor.user();
+	            if (user == undefined || user.profile == undefined) {
+	                return [];
+	            }
+	            var userProfile = user.profile;
+	            var favStores = userProfile.favStores;
+	            var favStoreData = [];
+	            for (var i in favStores) {
+	                var storeObj = Stores.findOne({"_id":favStores[i]});
+	                if (storeObj != undefined) {
+	                    favStoreData.push(storeObj);
+	                }
+	            }
+	            return favStoreData;
+	        },
+	        favItems() {
+	            var user = Meteor.user();
+	            if (user == undefined || user.profile == undefined) {
+	                return [];
+	            }
+	            var userProfile = user.profile;
+	            var favItems = userProfile.favItems;
+	            var favItemData = [];
+	            for (var i in favItems) {
+	                console.log("Item:"+i);
+	                var itemObj = Items.findOne({"_id":favItems[i]});
+	                if (itemObj != undefined) {
+	                    favItemData.push(itemObj);
+	                }
+	            }
+	            console.log("fav item data:"+JSON.stringify(favItemData));
+	            return favItemData;
+	        },
+	        isLoggedIn() {
+	        	return !!Meteor.user();
+	        },
+	        favItemsCount() {
+	        	return Counts.get('numberOfItems');
+	        }
+		}
 );
 
 		$scope.subscribe('stores');
@@ -580,6 +654,28 @@ class appMaps {
 
 		google.maps.event.trigger($scope.map, 'resize');
 	}
+	showShoppingLists(){
+      this.showMeShoppingLists = !this.showMeShoppingLists;
+  	};
+	showFavStores(){
+      this.showMeFavStores = !this.showMeFavStores;
+	};
+	showMap(){
+	      //this.showMeMap = !this.showMeMap;
+	};
+	reset () {
+		this.searchText = '';
+		this.showMe = false;
+	};
+	showFavItems(){
+      this.showMeFavItems = !this.showMeFavItems;
+	};
+	pageChanged(newPage) {
+	  this.page = newPage;
+	};
+	sortChanged(sort) {
+	  this.sort = sort;
+	};
 	change(){
 		console.log("Search text typed in");
 		if (this.searchText === ''){
@@ -662,17 +758,7 @@ class appMaps {
 		//console.log(this.scope.markers);
 		alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
 	};
-	pageChanged(newPage) {
-		this.page = newPage;
-	};
-
-	sortChanged(sort) {
-		this.sort = sort;
-	};
-	reset () {
-		this.searchText = '';
-		this.showMe = false;
-	};
+	
 	setStoreOnMap(i, franchise, icon, position){
 		console.log("Inside setStoreOnMap function");
 		console.log(franchise + i.toString());
@@ -764,7 +850,7 @@ function config($stateProvider) {
 	'ngInject';
 
 	$stateProvider.state('appMaps', {
-		url: '/appMaps',
+		url: '/dashboard',
 		template: '<app-maps></app-maps>',
 	});
 };

@@ -2,7 +2,7 @@ import angular from 'angular';
 import angularMeteor from 'angular-meteor';
 import uiRouter from 'angular-ui-router';
 import template from './foodHero.html';
-import { name as ShoppingList } from '../shoppingList/shoppingList';
+import { name as appMaps } from '../appMaps/appMaps';
 import { name as Navigation } from '../navigation/navigation';
 import { name as ItemDetails } from '../itemDetails/itemDetails';
 import { name as ExtraPage } from '../extraPage/extraPage';
@@ -19,7 +19,7 @@ const name = 'foodHero';
 export default angular.module(name, [
   angularMeteor,
   uiRouter,
-  ShoppingList,
+  appMaps,
   ExtraPage,
   MainPage,
   SecondPage,
