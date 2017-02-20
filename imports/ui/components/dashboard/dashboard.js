@@ -578,7 +578,7 @@ class dashboard {
 							$scope.favouritesButtonClicked = function() {
 								console.log("FavouritesButtonClicked!",$scope.postalCode);
 								var postalCode = $scope.postalCode;
-								alert(postalCode);
+								//alert(postalCode);
 								var storeObj = Stores.findOne({"code":postalCode});
 
 								var storeId = storeObj._id;
@@ -610,13 +610,13 @@ class dashboard {
 							console.log($scope.postalCode);
 
 							var result = Stores.findOne({"code": $scope.postalCode});
-							alert(result + $scope.postalCode);
+							//alert(result + $scope.postalCode);
 							if ( result == null || result == undefined)
 							{
 								return; 
 							} 
 
-							alert("Made it past the return for: " + $scope.postalCode + JSON.stringify($scope.mapMarkers));
+							//alert("Made it past the return for: " + $scope.postalCode + JSON.stringify($scope.mapMarkers));
 
 							$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng(), null, $scope.postalCode, place.name, place.formatted_address));
 							$scope.markers = [];
@@ -708,7 +708,7 @@ class dashboard {
 		var userLocation = Session.get('location');
 		console.log("USER LOCATION:"+JSON.stringify(userLocation));
 		if (userLocation == undefined || userLocation == null) {
-			alert ("Could not get your location, proceeding globally");
+			//alert ("Could not get your location, proceeding globally");
 			userLocation = '';
 		}
 		console.log("getting prices:"+itemId+":"+JSON.stringify(itemdata)+":"+distance+":"+JSON.stringify(franchises)+":"+userLocation);
@@ -741,7 +741,7 @@ class dashboard {
 
 		//console.log("FROM GETPRICE, THIS.SCOPE.MARKERS:");
 		//console.log(this.scope.markers);
-		alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
+		//alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
 	};
 	
 	setStoreOnMap(i, franchise, icon, position){
