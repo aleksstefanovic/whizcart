@@ -1,14 +1,16 @@
 .angular-google-map-container {
-	position: fixed;
-	top: 0;
+	border-style: dotted;
+	border-color: red;
+	position: relative;
+	float: left;
+	/*top: 0;
 	bottom: 0;
 	right: 0;
-	left: 0;
-	height: 800px;
-	width: 100%;
-	/*height: 60%;
-	width: 60%;*/
-	padding-left: 20px;
+	left: 0;*/
+	width: 60%;
+	/*padding-left: 20px;*/
+	/*padding-bottom: 50px;*/
+	padding-top: 500px;
 }
 
 html, body{
@@ -18,15 +20,16 @@ html, body{
 	padding: 10px;
 }
 
-#map-canvas{
+/*#map-canvas{
+	border-style: dotted;
+	border-color: green;
 	position: relative;
 	float: left;
 	/*height: 50%;
-	width: 50%;*/
-	height: 500px;
-	width: 100%;
-	padding-bottom: 66.67% /* aspect ratio 3:2*/
-}
+	width: 50%;
+	height: 100%;
+	width: 60%;
+	padding-bottom: 66.67% /* aspect ratio 3:}*/
 
 #distance-inputBox{
 	position: relative;
@@ -37,3 +40,4 @@ html, body{
 .ui-gmap-search-box {
 	padding: 10px;
 }
+

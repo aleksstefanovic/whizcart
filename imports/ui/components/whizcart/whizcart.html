@@ -1,22 +1,74 @@
-
 <style>
-	.footer {
-  		position: absolute;
-  		right: 0;
-  		bottom: 0;
-  		left: 0;
-  		padding: 1rem;
-  		background-color: #efefef;
-  		text-align: center;
+
+	html, body {
+		height: 100%;
 	}
+
+	#wrap {
+		min-height: 100%;
+	}
+
+	#main {
+		overflow:auto;
+		padding-bottom: 100px;
+	}  /* must be same height as the footer */
+
+	#footer {
+		position: relative;
+		margin-top: -1000px; /* negative value of footer height */
+		height: 150px;
+		clear:both;
+		background-color: green;
+	} 
+
+
+	.column {
+		position: relative; 
+		float: left;
+		color: white
+	}
+
+	.column-list {
+		list-style: none; 
+		text-align: left;
+		padding: 10px;
+	}
+
+	.allFootertext {
+		position: relative;
+		float: right;
+	}
+
 </style>
 
-<navigation class = "navbar navbar-static-top" > </navigation>
-<div ui-view="" class = "container-fluid"> </div>
 
+<div id="wrap">
+	<navigation class = "navbar navbar-static-top" > </navigation>
+	<div ui-view="" class = "container-fluid" style="margin-bottom: 100px; padding-bottom: 10px"></div>
+</div>
 
- <!--<footer class="footer">
-    <div class="container">
-       <span class="text-muted">Contact us at contactus@whizcart.com</span>
-    </div>
- </footer>-->
+<div id="footer">
+	<!-- <span> Contact us at contactus@whizcart.com</span>-->
+	<div class="allFooterText">
+		<div class="column">
+			<ul class="column-list">
+				<li> Retail Platform </li>
+				<li> Media Platform </li>
+				<li> Mobile App </li>
+				<li> About Us </li>
+				<li> Contact Us </li>
+				<li> Help </li>
+			</ul>
+		</div>
+
+		<div class="column">
+			<ul class="column-list">
+				<li> Careers </li>
+				<li> Client Login </li>
+				<li> Privacy Policy </li>
+				<li> Terms of Use </li>
+				<li> Accessibility Plan </li>
+			</ul>
+		</div>
+	</div>
+</div>
