@@ -48,7 +48,7 @@
 		<input type="text" placeholder="Favourite Stores">
 	</script>
 
-	<div style="width: 100%; height: 100%">
+	<div style="width: 100%; height: 100%" ng-if = "dashboard.isLoggedIn">
 		<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
 
 			<ui-gmap-markers  models="mapMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true">
