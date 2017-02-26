@@ -23,7 +23,7 @@ export default function binarySearch(haystack, needle) {
 		while (low <= high) {
 			mid = parseInt((low + high) / 2);
 			var element = haystack[mid].location;
-			console.log("BS Element:"+element);
+			//console.log("BS Element:"+element);
 			
 			if (element > needle) {
 				high = mid - 1;

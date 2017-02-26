@@ -40,15 +40,10 @@
 		<p ng-show = "dashboard.isLoggedIn"> Max Distance: {{maxDistance}}</p>
 	</div>
 
-	<div id="cards" style="position: static; border-style: dashed; padding-bottom: 100px">
-		<div style="border-style: solid; width: 10%; height: 100px; position: relative; float: left">
-			<p> I am a price </p>
-		</div>
-		<div style="border-style: solid; width: 10%; height: 100px; position: relative; float: left">
-			<p> I am another price </p>
-		</div>
-		<div style="border-style: solid; width: 10%; height: 100px; position: relative; float: left"> 
-			<p> I am another price </p>
+	<div id="cards" ng-show = "dashboard.hasCards" style="position: static; border-style: dashed; padding-bottom: 100px">
+		<div ng-repeat="card in dashboard.itemCards" style="border-style: solid; width: 10%; height: 100px; position: relative; float: left">
+			 {{card.name}}
+			 {{card.price}}
 		</div>
 	</div>
 

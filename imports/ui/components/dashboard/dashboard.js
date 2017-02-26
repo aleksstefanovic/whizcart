@@ -39,6 +39,9 @@ class dashboard {
 		this.showMeMap = true;
 		this.showMeFavItems = false;
 
+		this.itemCards = [];
+		this.hasCards = false;
+
 		this.helpers(
 		{
 			items() { 
@@ -569,7 +572,11 @@ class dashboard {
 										category.types.forEach(function(type){
 											if (type == "postal_code") {
 												console.log(category.long_name);
+
 												$scope.postalCode = category.long_name.trim().replace(' ', '');
+												if ($scope.postalCode.length != 6) {
+													alert ("UNEXPECTED POSTAL CODE FOR STORE " + place.name + ":"+$scope.postalCode);
+												}
 												$scope.fullName = place.name;
 												$scope.fullAddress = place.formatted_address;
 												console.log($scope.fullAddress);
@@ -692,14 +699,10 @@ class dashboard {
 			userLocation = '';
 		}
 		//console.log("getting prices:"+itemId+":"+JSON.stringify(itemdata)+":"+distance+":"+JSON.stringify(franchises)+":"+userLocation);
-		var priceobj = getPrice (itemId, itemdata, distance, franchises, userLocation);
-		var bestPrice = priceobj.price;
+		var priceObjArray = getPrice (itemId, itemdata, distance, franchises, userLocation);
+		
 		//console.log(priceobj);
 		//console.log("BEST PRICE FINAL:"+ bestPrice);
-		var position = {
-			lat: priceobj.lat,
-			lng: priceobj.lng
-		};
 
 		//console.log(position);
 		//console.log("This.scope", this.scope);
@@ -711,13 +714,30 @@ class dashboard {
 			}
 		});
 		this.scope.mapMarkers = [user];
-		position.name = priceobj.storename;
-		position.postalCode = priceobj.postalcode;
-		position.address = priceobj.storeaddress;
 
+		for (var m=0; m < priceObjArray.length; m++) {
+			var priceobj = priceObjArray[m];
+			console.log("PRICE OBJ:"+JSON.stringify(this.price));
+			var bestPrice = priceobj.price;
+			var position = {
+				lat: priceobj.lat,
+				lng: priceobj.lng
+			};
 
-		this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position);
+			position.name = priceobj.storename;
+			position.postalCode = priceobj.postalcode;
+			position.address = priceobj.storeaddress;
 
+			this.setStoreOnMap (0, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
+			console.log("creating item card");
+			var itemCard = {
+				"price":priceobj.price,
+				"name":itemName
+			};
+			this.itemCards.push(itemCard);
+		}
+
+		this.hasCards = true;
 		//console.log("FROM GETPRICE, THIS.USERLOCATIONMARKER");
 		//console.log(this.scope.userLocationMarker);
 

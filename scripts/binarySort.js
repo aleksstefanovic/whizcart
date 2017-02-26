@@ -1,5 +1,5 @@
-export default function binarySort (array, left, right) {
-//    console.log("sorting...");
+export default function binarySort (array, key, left, right) {
+    console.log("sorting...");
 
     var pivot = null;
 
@@ -21,12 +21,14 @@ export default function binarySort (array, left, right) {
       // the array to values < than or > than
       // the pivot value
       pivot     = left + Math.ceil((right - left) * 0.5);
-      newPivot  = partition(array, pivot, left, right);
+      newPivot  = partition(array, pivot, left, right, key);
 
       // recursively sort to the left and right
-      binarySort(array, left, newPivot - 1);
-      binarySort(array, newPivot + 1, right);
+      binarySort(array, key, left, newPivot - 1);
+      binarySort(array, key, newPivot + 1, right);
     }
+
+    return array;
 } 
 
   function swap(array, indexA, indexB) {
@@ -41,10 +43,15 @@ export default function binarySort (array, left, right) {
     }
   }
 
-  function partition(array, pivot, left, right) {
+  function partition(array, pivot, left, right, key) {
 
-    var storeIndex = left,
+    var storeIndex = left;
+    if (key == 'location') {
         pivotValue = array[pivot].location;
+    }
+    else if (key == 'price') {
+        pivotValue = array[pivot].price;
+    }
 
     // put the pivot on the right
     swap(array, pivot, right);
@@ -55,9 +62,17 @@ export default function binarySort (array, left, right) {
       // if the value is less than the pivot's
       // value put it to the left of the pivot
       // point and move the pivot point along one
-      if(array[v].location < pivotValue) {
-        swap(array, v, storeIndex);
-        storeIndex++;
+      if (key == 'location') {
+        if(array[v].location < pivotValue) {
+          swap(array, v, storeIndex);
+          storeIndex++;
+        }
+      }
+      else if (key == 'price') {
+        if(array[v].price < pivotValue) {
+          swap(array, v, storeIndex);
+          storeIndex++;
+        }
       }
     }
 
