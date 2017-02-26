@@ -17,7 +17,7 @@ module.exports = {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'http://52.205.22.52:8000',
+      ROOT_URL: 'http://52.205.22.52:80',
       MONGO_URL: 'mongodb://localhost/meteor'
     },
 
