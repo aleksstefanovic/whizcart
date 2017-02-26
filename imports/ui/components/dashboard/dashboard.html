@@ -35,7 +35,7 @@
 		<div style="clear: left" ng-show = "dashboard.isLoggedIn" > The following stores are checked: {{checked_stores | json}} </div>
 
 				
-		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
+		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-show = "dashboard.isLoggedIn" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
 
 		<!--<input id="maxDistance" type="text" class="controls" placeholder="Max Distance (km)" ng-model="maxDistance" ng-change=maxDistanceChanged() ng-show = "dashboard.isLoggedIn">-->
 		<p ng-show = "dashboard.isLoggedIn"> Max Distance: {{maxDistance}}</p>
