@@ -125,8 +125,8 @@ class dashboard {
 		$scope.showMap = true;
 		
 		//console.log("From the constructor inside dashboard.js");
-		$scope.allFranchisesInSmartCart = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills", "Soren"];
-		$scope.checked_stores = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills", "Soren"];
+		$scope.allFranchisesInSmartCart = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
+		$scope.checked_stores = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 
 		$scope.$watch('checked_stores', function(newValue, oldValue, scope){
 			//console.log("checked_stores Changed!")
