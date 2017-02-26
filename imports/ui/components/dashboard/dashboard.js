@@ -32,6 +32,7 @@ class dashboard {
 			code: 1
 		};
 		this.searchText = '';
+		this.maxDistance;
 		this.showMe = false;
 		this.showMeShoppingLists = false;
 		this.showMeFavStores = false;
@@ -41,7 +42,7 @@ class dashboard {
 		this.helpers(
 		{
 			items() { 
-				console.log("finding matches");
+				//console.log("finding matches");
 				var itemCursor = Items.find({ 
 					"name": {
 						$regex: `.*${this.getReactively('searchText')}.*`,
@@ -106,13 +107,13 @@ class dashboard {
             	var favItems = userProfile.favItems;
             	var favItemData = [];
             	for (var i in favItems) {
-            		console.log("Item:"+i);
+            		//console.log("Item:"+i);
             		var itemObj = Items.findOne({"_id":favItems[i]});
             		if (itemObj != undefined) {
             			favItemData.push(itemObj);
             		}
             	}
-            	console.log("fav item data:"+JSON.stringify(favItemData));
+            	//console.log("fav item data:"+JSON.stringify(favItemData));
             	return favItemData;
             },
             isLoggedIn() {
@@ -123,24 +124,24 @@ class dashboard {
 
 		$scope.showMap = true;
 		
-		console.log("From the constructor inside dashboard.js");
+		//console.log("From the constructor inside dashboard.js");
 		$scope.allFranchisesInSmartCart = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills", "Soren"];
 		$scope.checked_stores = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills", "Soren"];
 
 		$scope.$watch('checked_stores', function(newValue, oldValue, scope){
-			console.log("checked_stores Changed!")
+			//console.log("checked_stores Changed!")
 
 			var removed = $(oldValue).not(newValue).get();	// black magic from stack overflow
 			var added = $(newValue).not(oldValue).get();
 
-			console.log("Removed: " + removed);
-			console.log("Added: " + added);
+			//console.log("Removed: " + removed);
+			//console.log("Added: " + added);
 
 			if (removed == "" && added != ""){ // If a store was added to the list
 				postalCodeChanged($scope.userLocationSearchBox2);
 			} 
 			else if (removed != "" && added == ""){ // If removed
-				console.log("nothing added!");
+				//console.log("nothing added!");
 				var franchiseReturnCode = setFranchiseReturnCode(removed);
 
 				for (i = $scope.existingStoreMarkers.length - 1; i >= 0; i--) {
@@ -186,7 +187,7 @@ class dashboard {
 				click: function(marker, eventName, model, arguments){
 					$scope.map.window.model = model;
 					$scope.map.window.show = true;
-					console.log("CLICKED ON A MARKER BRO ");	
+					//console.log("CLICKED ON A MARKER BRO ");	
 				}
 			},
 			window: {
@@ -202,6 +203,13 @@ class dashboard {
 
 			events: {
 
+				tilesloaded: function (map) {
+					$scope.$apply(function () {
+						$scope.actualMapObj = map;
+						//console.info('this is the map instance', map);
+					});
+				},
+
 				/*mouseover: function(map){
 					console.log("Inside Mouseover");
 					$scope.map.options.scrollwheel = false;
@@ -212,12 +220,12 @@ class dashboard {
 					//console.log("Mouse left map!");
 					$scope.map.options.scrollwheel = false;
 					//console.log($scope.map.options.scrollwheel);
-					console.log($scope.mapMarkers);
+					//console.log($scope.mapMarkers);
 					//console.log($scope.existingStoreMarkers);
 				},
 
 				bounds_changed: function(map) {
-					console.log("Map bounds_Changed event fired!");
+					//console.log("Map bounds_Changed event fired!");
 					//console.log($scope.markers);
 					//console.log($scope.existingStoreMarkers);
 
@@ -243,19 +251,19 @@ class dashboard {
 		$scope.onClick = function(marker, eventName, model) {
 
 			if (marker.key == "userLocationMarker"){
-				console.log("User location marker, quitting function");
+				//console.log("User location marker, quitting function");
 				return 
 			}
 
 
-			console.log("Marker Clicked Two!");
-			console.log("MARKER KEY: " + marker.key);
+			//console.log("Marker Clicked Two!");
+			//console.log("MARKER KEY: " + marker.key);
 			var lng, lat;
 
 			$scope.mapMarkers.forEach(function(mapMarker) {
 				if (marker.key == mapMarker.id) {
-					console.log(mapMarker.id);
-					console.log(mapMarker.fullName);
+					//console.log(mapMarker.id);
+					//console.log(mapMarker.fullName);
 					$scope.fullName = mapMarker.fullName;
 					$scope.fullAddress = mapMarker.fullAddress;
 					$scope.postalCode = mapMarker.postalCode;
@@ -265,28 +273,28 @@ class dashboard {
 				}
 			});
 
-			console.log($scope.mapMarkers)
+			//console.log($scope.mapMarkers)
 
 			$scope.favouritesButtonClicked = function() {
-				console.log("FavouritesButtonClicked!",$scope.postalCode);
+				//console.log("FavouritesButtonClicked!",$scope.postalCode);
 				var postalCode = $scope.postalCode;
 				var storeObj = Stores.findOne({"code":postalCode});
 
 				var storeId = storeObj._id;
 				var storeFran = storeObj.franchise;
-				console.log(storeId);
+				//console.log(storeId);
 				var userId = Meteor.user()._id;
 				var response = addFavStore(postalCode, storeFran,storeId,userId);
 			}
 
 			model.show = !model.show;
 			$scope.activeModel = model;
-			console.log($scope.activeModel.show);
+			//console.log($scope.activeModel.show);
 		};  
 
 		$('.angular-google-map-container').click(function(){
 			$scope.map.options.scrollwheel = true;
-			console.log($scope.map.options.scrollwheel);
+			//console.log($scope.map.options.scrollwheel);
 		})
 
 		$(window).scroll(function(){
@@ -326,7 +334,7 @@ class dashboard {
 		}
 
 		function noUserLocationHTML5(error){
-			console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+			//console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
 		}
 		navigator.geolocation.getCurrentPosition(foundUserLocationHTML5, noUserLocationHTML5);
 
@@ -362,7 +370,7 @@ class dashboard {
 		};
 
 		$scope.chkBoxChanged = function(){
-			console.log("Check box changed!");
+			//console.log("Check box changed!");
 		}
 
 		function populateDestinationArray(relevantStoresToSearch, destArray){
@@ -409,7 +417,7 @@ class dashboard {
 
 		function postalCodeChanged(searchbox){
 
-			console.log($scope.mapMarkers);
+			//console.log($scope.mapMarkers);
 			for(index in $scope.mapMarkers)
 			{
 				if ($scope.mapMarkers[index].id == "userLocationMarker"){
@@ -430,7 +438,7 @@ class dashboard {
 				return;
 			}
 			else{
-				console.log("Succesfully found user location!")
+				//console.log("Succesfully found user location!")
 
 				$scope.map.center = $scope.places[0].geometry.location;
 
@@ -439,8 +447,8 @@ class dashboard {
 					lng: parseFloat($scope.places[0].geometry.location.lng().toFixed(5))
 				}
 
-				console.log($scope.userLocation.lat);
-				console.log($scope.userLocation.lng);
+				//console.log($scope.userLocation.lat);
+				//console.log($scope.userLocation.lng);
 
 				var userLocationMarkerInfo = {
 					id: "userLocationMarker", 
@@ -451,70 +459,6 @@ class dashboard {
 
 				$scope.mapMarkers.push(userLocationMarkerInfo);
 
-				/*console.log("LINE 368");
-				console.log($scope.mapMarkers);
-
-				$scope.roughLatDifference = 0.01 * $scope.maxDistance;
-				$scope.roughLngDifference = $scope.maxDistance/(Math.cos((Math.abs($scope.userLocation.lat)*Math.PI/180)) * 111); 
-				console.log("ROUGH LAT DIFFERENCE: " + $scope.roughLatDifference);
-				console.log("ROUGH LNG DIFFERENCE: " + $scope.roughLngDifference); // Could use taylor series expansion to make it faster if necessary. Could also do that in the other function where  distance calculated
-
-				$scope.relevantStoresToSearch = getRelevantStores($scope.userLocation, $scope.franchises, $scope.maxDistance, $scope.roughLatDifference, $scope.roughLngDifference);
-				console.log("RELE:"+JSON.stringify($scope.relevantStoresToSearch));
-
-				populateDestinationArray($scope.relevantStoresToSearch, $scope.destArray);
-
-				var service = new google.maps.DistanceMatrixService;
-				
-				service.getDistanceMatrix({
-					origins: [$scope.userLocation],
-					destinations: [$scope.destArray[0], $scope.destArray[1], $scope.destArray[2], $scope.destArray[3], $scope.destArray[4], $scope.destArray[5], $scope.destArray[6], $scope.destArray[7], $scope.destArray[8], $scope.destArray[9], $scope.destArray[10], $scope.destArray[11], $scope.destArray[12], $scope.destArray[13], $scope.destArray[14], $scope.destArray[15], $scope.destArray[16], $scope.destArray[17], $scope.destArray[18], $scope.destArray[19], $scope.destArray[20], $scope.destArray[21], $scope.destArray[22], $scope.destArray[23], $scope.destArray[24]],
-					travelMode: $scope.myTravelMode, 
-					unitSystem: google.maps.UnitSystem.METRIC,
-					avoidHighways: false,
-					avoidTolls: false,
-				}, function(response, status) {
-					if (status != 'OK'){
-						console.log("Error was: " + status);
-						return "error";
-					}
-					else{
-						var originList = response.originAddresses;
-						var destinationList = response.destinationAddresses;
-						var results = response.rows[0].elements;
-
-						var destinationIcon;
-
-						for (i = 0; i < response.rows[0].elements.length; i++) {
-							try {
-								var badErrorChecking = results[i].distance.value;
-							}
-							catch (e) {
-								break;
-							}
-
-							destinationIcon = setDestinationIcon($scope.relevantStoresToSearch[i].franchise);
-							var franchiseReturnCode = setFranchiseReturnCode($scope.relevantStoresToSearch[i].franchise);
-
-							if ($scope.franchises.length == 0) {
-								if (results[i].distance.value/1000 < $scope.maxDistance) {
-									setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]);
-									$scope.returnPostalCodes.push(franchiseReturnCode + $scope.relevantStoresToSearch[i].code);
-								}
-							}
-							else {
-								if (results[i].distance.value/1000 < $scope.maxDistance && $scope.franchises.indexOf($scope.relevantStoresToSearch[i].franchise) != -1) {
-									setStoreOnMap(i, franchiseReturnCode, destinationIcon, $scope.destArray[i]);
-									$scope.returnPostalCodes.push(franchiseReturnCode + $scope.relevantStoresToSearch[i].code);
-								}	
-							}
-						}				
-					}
-					$scope.$apply();
-					console.log($scope.returnPostalCodes);
-				});*/
-
-				//oldPlace = $scope.places[0].names
 			}
 		}
 
@@ -527,7 +471,7 @@ class dashboard {
 				_timeout = null;
 
 				if ($scope.userLocation == null){
-					console.log("No user location, cancelling!");
+					//console.log("No user location, cancelling!");
 					return;
 				}
 				postalCodeChanged($scope.userLocationSearchBox2);
@@ -541,9 +485,9 @@ class dashboard {
 			},
 			events: {
 				places_changed: function(searchbox) {
-					console.log("User Location change event fired!");
+					//console.log("User Location change event fired!");
 					$scope.userLocationSearchBox2 = searchbox;
-					console.log(searchbox);
+					//console.log(searchbox);
 					postalCodeChanged($scope.userLocationSearchBox2);
 				}
 			},
@@ -556,7 +500,7 @@ class dashboard {
 			},
 			events: { // Favourite stores changed event
 				places_changed: function(searchbox) {
-					console.log("Inside Favourite Stores places changed event");
+					//console.log("Inside Favourite Stores places changed event");
 					$scope.$apply(); // This applies the options.bounds settings to the searchbox
 
 					var user;
@@ -576,7 +520,7 @@ class dashboard {
 					if($scope.places.length == 0){
 						return;
 					} else {
-						console.log("Inside favourite stores function!");
+						//console.log("Inside favourite stores function!");
 
 
 						$scope.favouriteStoresCount = 0;
@@ -600,82 +544,66 @@ class dashboard {
 							return ret;
 						};
 
-						/*$scope.onClick = function(marker, eventName, model) {
-
-							console.log("Marker Clicked!");
-							console.log(marker.key);
-							var lng, lat;
-
-							$scope.mapMarkers.forEach(function(mapMarker) {
-								if (marker.key == mapMarker.id) {
-									$scope.fullName = mapMarker.fullName;
-									$scope.fullAddress = mapMarker.fullAddress;
-									$scope.postalCode = mapMarker.postalCode;
-									lat = mapMarker.latitude;
-									lng = mapMarker.longitude;
-									return;
-								}
-							});
-
-							console.log($scope.mapMarkers)
-
-							$scope.favouritesButtonClicked 	= function() {
-								console.log("FavouritesButtonClicked!",$scope.postalCode);
-								var postalCode = $scope.postalCode;
-								//alert(postalCode);
-								var storeObj = Stores.findOne({"code":postalCode});
-
-								var storeId = storeObj._id;
-								var storeFran = storeObj.franchise;
-								console.log(storeId);
-								var userId = Meteor.user()._id;
-								var response = addFavStore(postalCode, storeFran,storeId,userId);
-							}
-
-							model.show = !model.show;
-							$scope.activeModel = model;
-							console.log($scope.activeModel.show);
-						};  */
-
 						$scope.places.forEach(function(place){
-							console.log("inside $scope.places.forEach");
-							console.log(place);
+							//console.log("inside $scope.places.forEach");
+							//console.log(place);
+
+							var request = {
+								placeId: place.place_id,
+							}
 
 							if (place.types.indexOf("grocery_or_supermarket") == -1){
 								return;
 							}
 
-							$scope.fullName = place.name;
-							$scope.fullAddress = place.formatted_address;
-							console.log($scope.fullAddress);
-							var lastCommaIndex = $scope.fullAddress.lastIndexOf(",");
-							$scope.postalCode = $scope.fullAddress.substr(lastCommaIndex-7,7);
-							$scope.postalCode = $scope.postalCode.replace(/\s+/g,'');
-							console.log($scope.postalCode);
+							var service = new google.maps.places.PlacesService($scope.actualMapObj);
+							service.getDetails(request, callback);
 
-							var result = Stores.findOne({"code": $scope.postalCode});
-							//alert(result + $scope.postalCode);
-							if ( result == null || result == undefined)
-							{
-								return; 
-							} 
+							function callback(results, status) {
+								if (status === google.maps.places.PlacesServiceStatus.OK) {
+									var stop = false;
 
-							//alert("Made it past the return for: " + $scope.postalCode + JSON.stringify($scope.mapMarkers));
+									console.log(results);
+									results.address_components.forEach(function(category){
+										console.log()
+										category.types.forEach(function(type){
+											if (type == "postal_code") {
+												console.log(category.long_name);
+												$scope.postalCode = category.long_name.trim().replace(' ', '');
+												$scope.fullName = place.name;
+												$scope.fullAddress = place.formatted_address;
+												console.log($scope.fullAddress);
+												console.log($scope.postalCode);
 
-							$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng(), null, $scope.postalCode, place.name, place.formatted_address));
-							$scope.markers = [];
-							$scope.markers = $scope.mapMarkers; 
+												var result = Stores.findOne({"code": $scope.postalCode});
+												if ( result == null || result == undefined)
+												{
+													return; 
+												} 
 
-							console.log("mapMarkers: ", $scope.mapMarkers);
-							console.log("markers: ", $scope.markers);
+												$scope.mapMarkers.push(createFavStoreMarker($scope.favouriteStoresCount, $scope.map.bounds, place.geometry.location.lat(), place.geometry.location.lng(), null, $scope.postalCode, place.name, place.formatted_address));
+												$scope.markers = [];
+												$scope.markers = $scope.mapMarkers; 
 
+				
+												$scope.$apply();
 
+												$scope.favouriteStoresCount += 1;
+												stop = true;
+												return;
+											}
+										});
+										if (stop)  {
+											return;
+										}
+									});
 
-							$scope.favouriteStoresCount += 1;
-						})
+								}
+							}
+						});
 
-						console.log($scope.mapMarkers);
 					}
+
 				}
 			},
 		}
@@ -705,8 +633,11 @@ class dashboard {
 	  sortChanged(sort) {
 	  	this.sort = sort;
 	  };
+	  distanceChange() {
+	  		this.scope.maxDistance = this.maxDistance; 
+	  };
 	  change(){
-	  	console.log("Search text typed in");
+	  	//console.log("Search text typed in");
 	  	if (this.searchText === ''){
 	  		this.showMe = false;
 	  		return;
@@ -721,23 +652,28 @@ class dashboard {
 	  	var storeObj = Stores.findOne({"code":postalCode});
 	  	var storeId = storeObj._id;
 	  	var storeFran = storeObj.franchise;
-	  	console.log(storeId);
+	  	//console.log(storeId);
 	  	var userId = Meteor.user()._id;
 	  	var response = addFavStore(postalCode, storeFran,storeId,userId);
 	  	this.reset();
 	  };
 	  addItemToFavs(){
 	  	var itemName = this.searchText;
-	  	var itemId = Items.findOne({"name":itemName})._id;
-	  	console.log(itemId);
-	  	var userId = Meteor.user()._id;
-	  	var response = addFavItem(itemName,itemId,userId);
-	  	this.reset();
-	  };
-	  addToShoppingList(){
-	  	var itemName = this.searchText;
-	  	var itemId = Items.findOne({"name":itemName})._id;
-	  	console.log(itemId);
+	  	try {
+	  		var itemId = Items.findOne({"name":itemName})._id;
+		  	//console.log(itemId);
+		  	var userId = Meteor.user()._id;
+		  	var response = addFavItem(itemName,itemId,userId);
+		  }
+		  catch (e) {
+
+		  }
+		  this.reset();
+		};
+		addToShoppingList(){
+			var itemName = this.searchText;
+			var itemId = Items.findOne({"name":itemName})._id;
+	  	//console.log(itemId);
 	  	var userId = Meteor.user()._id;
 	  	addToShoppingList (itemName, itemId, userId);        
 	  	this.reset();
@@ -747,27 +683,26 @@ class dashboard {
 	  	var itemObj = Items.findOne({"name":itemName});
 	  	var itemId = itemObj._id;
 	  	var itemdata = itemObj.data;
-	  	var distance = 10;
+	  	var distance = parseInt(this.maxDistance)	;
 	  	var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 	  	var userLocation = Session.get('location');
-	  	console.log("USER LOCATION:"+JSON.stringify(userLocation));
+	  	//console.log("USER LOCATION:"+JSON.stringify(userLocation));
 	  	if (userLocation == undefined || userLocation == null) {
 			//alert ("Could not get your location, proceeding globally");
 			userLocation = '';
 		}
-		console.log("getting prices:"+itemId+":"+JSON.stringify(itemdata)+":"+distance+":"+JSON.stringify(franchises)+":"+userLocation);
+		//console.log("getting prices:"+itemId+":"+JSON.stringify(itemdata)+":"+distance+":"+JSON.stringify(franchises)+":"+userLocation);
 		var priceobj = getPrice (itemId, itemdata, distance, franchises, userLocation);
 		var bestPrice = priceobj.price;
-		console.log(priceobj);
-		console.log("BEST PRICE FINAL:"+ bestPrice);
+		//console.log(priceobj);
+		//console.log("BEST PRICE FINAL:"+ bestPrice);
 		var position = {
 			lat: priceobj.lat,
 			lng: priceobj.lng
 		};
 
-		console.log(position);
-
-		console.log("This.scope", this.scope);
+		//console.log(position);
+		//console.log("This.scope", this.scope);
 
 		this.scope.mapMarkers.forEach(function (marker) {
 			if (marker.id == "userLocationMarker"){ 
@@ -792,8 +727,8 @@ class dashboard {
 	};
 	
 	setStoreOnMap(i, franchise, icon, position){
-		console.log("Inside setStoreOnMap function");
-		console.log(franchise + i.toString());
+		//console.log("Inside setStoreOnMap function");
+		//console.log(franchise + i.toString());
 		var existingStoreMarkerInfo = {
 			id: franchise + i.toString(),
 			latitude: position.lat,
@@ -889,9 +824,3 @@ function config($stateProvider) {
 		template: '<dashboard></dashboard>',
 	});
 };
-
-
-
-
-
-

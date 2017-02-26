@@ -21,7 +21,7 @@
 		</li>
 	</ul>
 
-	<div style="border-style: dotted; border-color: blue">
+	<div>
 		<button ng-click = "dashboard.addItemToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Item to Favourites</button>
 		<button ng-click = "dashboard.addToShoppingList()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Item to Shopping List</button>
 		<button ng-click = "dashboard.addStoreToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Store to Favourites</button>
@@ -34,7 +34,10 @@
 
 		<div style="clear: left" ng-show = "dashboard.isLoggedIn" > The following stores are checked: {{checked_stores | json}} </div>
 
-		<input id="maxDistance" type="text" class="controls" placeholder="Max Distance (km)" ng-model="maxDistance" ng-change=maxDistanceChanged() ng-show = "dashboard.isLoggedIn">
+				
+		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
+
+		<!--<input id="maxDistance" type="text" class="controls" placeholder="Max Distance (km)" ng-model="maxDistance" ng-change=maxDistanceChanged() ng-show = "dashboard.isLoggedIn">-->
 		<p ng-show = "dashboard.isLoggedIn"> Max Distance: {{maxDistance}}</p>
 	</div>
 
@@ -56,6 +59,7 @@
 					<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show" ng-cloak>
 						<p> <strong> Name: {{fullName}} </strong> </br>
 						{{fullAddress}}</br>
+						postalcode: {{postalCode}}
 							<button ng-click='$parent.favouritesButtonClicked()'> Add To Favourites </button>
 							<!--<button ng-click='$parent.databaseButtonClicked()''> Add To Database </button>-->
 						</p>
@@ -72,7 +76,7 @@
 			</div>
 		</div>
 
-		<div style="float: left; position: relative; width: 40%; height: 100%; border-style: dotted" ng-show = "dashboard.isLoggedIn">
+		<div style="float: left; position: relative; width: 40%; height: 100%" ng-show = "dashboard.isLoggedIn">
 
 
 			<button ng-click="dashboard.showShoppingLists()" class = "btn btn-success"> Display Shopping Lists</button>

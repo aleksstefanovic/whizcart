@@ -1,6 +1,6 @@
 .angular-google-map-container {
-	border-style: dotted;
-	border-color: red;
+	/*border-style: dotted;
+	border-color: red;*/
 	position: relative;
 	float: left;
 	/*top: 0;
@@ -20,16 +20,11 @@ html, body{
 	padding: 10px;
 }
 
-/*#map-canvas{
-	border-style: dotted;
-	border-color: green;
-	position: relative;
-	float: left;
-	/*height: 50%;
-	width: 50%;
-	height: 100%;
-	width: 60%;
-	padding-bottom: 66.67% /* aspect ratio 3:}*/
+#slider{
+	width: 10%;
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
 
 #distance-inputBox{
 	position: relative;
