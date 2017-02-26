@@ -33,10 +33,10 @@ class dashboard {
 		};
 		this.searchText = '';
 		this.showMe = false;
-	    this.showMeShoppingLists = false;
-	    this.showMeFavStores = false;
-	    this.showMeMap = true;
-	    this.showMeFavItems = false;
+		this.showMeShoppingLists = false;
+		this.showMeFavStores = false;
+		this.showMeMap = true;
+		this.showMeFavItems = false;
 
 		this.helpers(
 		{
@@ -61,65 +61,65 @@ class dashboard {
 				});
                 //alert(result);
                 return result;
-    		},
-    		itemsCount() {
-    			return Counts.get('numberOfItems');
-    		},
-        	shoppingList() {
-	            var user = Meteor.user();
-	            if (user == undefined || user.profile == undefined || user.profile.shoppingLists.length == 0) {
-	                return [];
-	            }
-	            var userProfile = user.profile;
-	            var shoppingList = userProfile.shoppingLists[0].items;
-	            var shoppingListData = [];
-	            for (var i in shoppingList) {
-	                var itemObj = Items.findOne({"_id":shoppingList[i]});
-	                if (itemObj != undefined) {
-	                    shoppingListData.push(itemObj);
-	                }
-	            }
-	            return shoppingListData;
-	        },
-	        favStores() {
-	            var user = Meteor.user();
-	            if (user == undefined || user.profile == undefined) {
-	                return [];
-	            }
-	            var userProfile = user.profile;
-	            var favStores = userProfile.favStores;
-	            var favStoreData = [];
-	            for (var i in favStores) {
-	                var storeObj = Stores.findOne({"_id":favStores[i]});
-	                if (storeObj != undefined) {
-	                    favStoreData.push(storeObj);
-	                }
-	            }
-	            return favStoreData;
-	        },
-	        favItems() {
-	            var user = Meteor.user();
-	            if (user == undefined || user.profile == undefined) {
-	                return [];
-	            }
-	            var userProfile = user.profile;
-	            var favItems = userProfile.favItems;
-	            var favItemData = [];
-	            for (var i in favItems) {
-	                console.log("Item:"+i);
-	                var itemObj = Items.findOne({"_id":favItems[i]});
-	                if (itemObj != undefined) {
-	                    favItemData.push(itemObj);
-	                }
-	            }
-	            console.log("fav item data:"+JSON.stringify(favItemData));
-	            return favItemData;
-	        },
-	        isLoggedIn() {
-	        	return !!Meteor.user();
-	        }
-		}
-);
+            },
+            itemsCount() {
+            	return Counts.get('numberOfItems');
+            },
+            shoppingList() {
+            	var user = Meteor.user();
+            	if (user == undefined || user.profile == undefined || user.profile.shoppingLists.length == 0) {
+            		return [];
+            	}
+            	var userProfile = user.profile;
+            	var shoppingList = userProfile.shoppingLists[0].items;
+            	var shoppingListData = [];
+            	for (var i in shoppingList) {
+            		var itemObj = Items.findOne({"_id":shoppingList[i]});
+            		if (itemObj != undefined) {
+            			shoppingListData.push(itemObj);
+            		}
+            	}
+            	return shoppingListData;
+            },
+            favStores() {
+            	var user = Meteor.user();
+            	if (user == undefined || user.profile == undefined) {
+            		return [];
+            	}
+            	var userProfile = user.profile;
+            	var favStores = userProfile.favStores;
+            	var favStoreData = [];
+            	for (var i in favStores) {
+            		var storeObj = Stores.findOne({"_id":favStores[i]});
+            		if (storeObj != undefined) {
+            			favStoreData.push(storeObj);
+            		}
+            	}
+            	return favStoreData;
+            },
+            favItems() {
+            	var user = Meteor.user();
+            	if (user == undefined || user.profile == undefined) {
+            		return [];
+            	}
+            	var userProfile = user.profile;
+            	var favItems = userProfile.favItems;
+            	var favItemData = [];
+            	for (var i in favItems) {
+            		console.log("Item:"+i);
+            		var itemObj = Items.findOne({"_id":favItems[i]});
+            		if (itemObj != undefined) {
+            			favItemData.push(itemObj);
+            		}
+            	}
+            	console.log("fav item data:"+JSON.stringify(favItemData));
+            	return favItemData;
+            },
+            isLoggedIn() {
+            	return !!Meteor.user();
+            }
+        }
+        );
 
 		$scope.showMap = true;
 		
@@ -239,6 +239,50 @@ class dashboard {
 				},
 			}
 		};
+
+		$scope.onClick = function(marker, eventName, model) {
+
+			if (marker.key == "userLocationMarker"){
+				console.log("User location marker, quitting function");
+				return 
+			}
+
+
+			console.log("Marker Clicked Two!");
+			console.log("MARKER KEY: " + marker.key);
+			var lng, lat;
+
+			$scope.mapMarkers.forEach(function(mapMarker) {
+				if (marker.key == mapMarker.id) {
+					console.log(mapMarker.id);
+					console.log(mapMarker.fullName);
+					$scope.fullName = mapMarker.fullName;
+					$scope.fullAddress = mapMarker.fullAddress;
+					$scope.postalCode = mapMarker.postalCode;
+					lat = mapMarker.latitude;
+					lng = mapMarker.longitude;
+					return;
+				}
+			});
+
+			console.log($scope.mapMarkers)
+
+			$scope.favouritesButtonClicked = function() {
+				console.log("FavouritesButtonClicked!",$scope.postalCode);
+				var postalCode = $scope.postalCode;
+				var storeObj = Stores.findOne({"code":postalCode});
+
+				var storeId = storeObj._id;
+				var storeFran = storeObj.franchise;
+				console.log(storeId);
+				var userId = Meteor.user()._id;
+				var response = addFavStore(postalCode, storeFran,storeId,userId);
+			}
+
+			model.show = !model.show;
+			$scope.activeModel = model;
+			console.log($scope.activeModel.show);
+		};  
 
 		$('.angular-google-map-container').click(function(){
 			$scope.map.options.scrollwheel = true;
@@ -556,7 +600,7 @@ class dashboard {
 							return ret;
 						};
 
-						$scope.onClick = function(marker, eventName, model) {
+						/*$scope.onClick = function(marker, eventName, model) {
 
 							console.log("Marker Clicked!");
 							console.log(marker.key);
@@ -575,7 +619,7 @@ class dashboard {
 
 							console.log($scope.mapMarkers)
 
-							$scope.favouritesButtonClicked = function() {
+							$scope.favouritesButtonClicked 	= function() {
 								console.log("FavouritesButtonClicked!",$scope.postalCode);
 								var postalCode = $scope.postalCode;
 								//alert(postalCode);
@@ -591,7 +635,7 @@ class dashboard {
 							model.show = !model.show;
 							$scope.activeModel = model;
 							console.log($scope.activeModel.show);
-						};  
+						};  */
 
 						$scope.places.forEach(function(place){
 							console.log("inside $scope.places.forEach");
@@ -640,74 +684,74 @@ class dashboard {
 		google.maps.event.trigger($scope.map, 'resize');
 	}
 	showShoppingLists(){
-      this.showMeShoppingLists = !this.showMeShoppingLists;
-  	};
+		this.showMeShoppingLists = !this.showMeShoppingLists;
+	};
 	showFavStores(){
-      this.showMeFavStores = !this.showMeFavStores;
+		this.showMeFavStores = !this.showMeFavStores;
 	};
 	showMap(){
 	      //this.showMeMap = !this.showMeMap;
-	};
-	reset () {
-		this.searchText = '';
-		this.showMe = false;
-	};
-	showFavItems(){
-      this.showMeFavItems = !this.showMeFavItems;
-	};
-	pageChanged(newPage) {
-	  this.page = newPage;
-	};
-	sortChanged(sort) {
-	  this.sort = sort;
-	};
-	change(){
-		console.log("Search text typed in");
-		if (this.searchText === ''){
-			this.showMe = false;
-			return;
-		};
-		if (this.showMe === true){
-			return;
-		};
-		this.showMe = !this.showMe;
-	};
-	addStoreToFavs(){
-		var postalCode = this.searchText;
-		var storeObj = Stores.findOne({"code":postalCode});
-		var storeId = storeObj._id;
-		var storeFran = storeObj.franchise;
-		console.log(storeId);
-		var userId = Meteor.user()._id;
-		var response = addFavStore(postalCode, storeFran,storeId,userId);
-		this.reset();
-	};
-	addItemToFavs(){
-		var itemName = this.searchText;
-		var itemId = Items.findOne({"name":itemName})._id;
-		console.log(itemId);
-		var userId = Meteor.user()._id;
-		var response = addFavItem(itemName,itemId,userId);
-		this.reset();
-	};
-	addToShoppingList(){
-		var itemName = this.searchText;
-		var itemId = Items.findOne({"name":itemName})._id;
-		console.log(itemId);
-		var userId = Meteor.user()._id;
-		addToShoppingList (itemName, itemId, userId);        
-		this.reset();
-	};
-	getPrice () {
-		var itemName = this.searchText;
-		var itemObj = Items.findOne({"name":itemName});
-		var itemId = itemObj._id;
-		var itemdata = itemObj.data;
-		var distance = 10;
-		var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
-		var userLocation = Session.get('location');
-		console.log("USER LOCATION:"+JSON.stringify(userLocation));
-		if (userLocation == undefined || userLocation == null) {
+	  };
+	  reset () {
+	  	this.searchText = '';
+	  	this.showMe = false;
+	  };
+	  showFavItems(){
+	  	this.showMeFavItems = !this.showMeFavItems;
+	  };
+	  pageChanged(newPage) {
+	  	this.page = newPage;
+	  };
+	  sortChanged(sort) {
+	  	this.sort = sort;
+	  };
+	  change(){
+	  	console.log("Search text typed in");
+	  	if (this.searchText === ''){
+	  		this.showMe = false;
+	  		return;
+	  	};
+	  	if (this.showMe === true){
+	  		return;
+	  	};
+	  	this.showMe = !this.showMe;
+	  };
+	  addStoreToFavs(){
+	  	var postalCode = this.searchText;
+	  	var storeObj = Stores.findOne({"code":postalCode});
+	  	var storeId = storeObj._id;
+	  	var storeFran = storeObj.franchise;
+	  	console.log(storeId);
+	  	var userId = Meteor.user()._id;
+	  	var response = addFavStore(postalCode, storeFran,storeId,userId);
+	  	this.reset();
+	  };
+	  addItemToFavs(){
+	  	var itemName = this.searchText;
+	  	var itemId = Items.findOne({"name":itemName})._id;
+	  	console.log(itemId);
+	  	var userId = Meteor.user()._id;
+	  	var response = addFavItem(itemName,itemId,userId);
+	  	this.reset();
+	  };
+	  addToShoppingList(){
+	  	var itemName = this.searchText;
+	  	var itemId = Items.findOne({"name":itemName})._id;
+	  	console.log(itemId);
+	  	var userId = Meteor.user()._id;
+	  	addToShoppingList (itemName, itemId, userId);        
+	  	this.reset();
+	  };
+	  getPrice () {
+	  	var itemName = this.searchText;
+	  	var itemObj = Items.findOne({"name":itemName});
+	  	var itemId = itemObj._id;
+	  	var itemdata = itemObj.data;
+	  	var distance = 10;
+	  	var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
+	  	var userLocation = Session.get('location');
+	  	console.log("USER LOCATION:"+JSON.stringify(userLocation));
+	  	if (userLocation == undefined || userLocation == null) {
 			//alert ("Could not get your location, proceeding globally");
 			userLocation = '';
 		}
@@ -732,6 +776,9 @@ class dashboard {
 			}
 		});
 		this.scope.mapMarkers = [user];
+		position.name = priceobj.storename;
+		position.postalCode = priceobj.postalcode;
+		position.address = priceobj.storeaddress;
 
 
 		this.setStoreOnMap (0, priceobj.storename ,this.setDestinationIcon(priceobj.storename), position);
@@ -751,7 +798,10 @@ class dashboard {
 			id: franchise + i.toString(),
 			latitude: position.lat,
 			longitude: position.lng,
-			icon: icon
+			icon: icon,
+			fullName: position.name,
+			fullAddress: position.address,
+			postalCode: position.postalCode
 		}
 
 		this.scope.mapMarkers.push(existingStoreMarkerInfo);

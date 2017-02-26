@@ -40,26 +40,27 @@
 
 	<!--<div style="float: left; margin: 0; width: 60%;  border-style: dotted; border-color: blue">-->
 
-	<script id="searchBoxUserLocation.tpl.html" type="text/ng-template">
-		<input type="text" placeholder="User Location">
-	</script>
+	<div id="map-canvas">
+		<script id="searchBoxUserLocation.tpl.html" type="text/ng-template">
+			<input type="text" placeholder="User Location">
+		</script>
 
-	<script id="mapSearchBox.tpl.html" type="text/ng-template">
-		<input type="text" placeholder="Favourite Stores">
-	</script>
+		<script id="mapSearchBox.tpl.html" type="text/ng-template">
+			<input type="text" placeholder="Favourite Stores">
+		</script>
 
-	<div style="width: 100%; height: 100%" ng-if = "dashboard.isLoggedIn">
-		<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
+		<div style="width: 100%; height: 100%" ng-if = "dashboard.isLoggedIn">
+			<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
 
-			<ui-gmap-markers  models="mapMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true">
-				<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show" ng-cloak>
-					<p> <strong> Name: {{fullName}} </strong> </br>
-						{{fullAddress}} PostalCode: {{PostalCode}}</br>
-						<button ng-click='$parent.favouritesButtonClicked()'> Add To Favourites </button>
-						<!--<button ng-click='$parent.databaseButtonClicked()''> Add To Database </button>-->
-					</p>
-				</ui-gmap-window>
-			</ui-gmap-markers>
+				<ui-gmap-markers  models="mapMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true">
+					<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show" ng-cloak>
+						<p> <strong> Name: {{fullName}} </strong> </br>
+						{{fullAddress}}</br>
+							<button ng-click='$parent.favouritesButtonClicked()'> Add To Favourites </button>
+							<!--<button ng-click='$parent.databaseButtonClicked()''> Add To Database </button>-->
+						</p>
+					</ui-gmap-window>
+				</ui-gmap-markers>
 
 					<!--<ui-gmap-markers models="userLocationMarker" coords="'self'" icon="'icon'" fit="true"> </ui-gmap-markers>
 					<ui-gmap-markers models="existingStoreMarkers" coords="'self'" icon="'icon'" fit="true"></ui-gmap-markers>-->

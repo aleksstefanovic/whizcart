@@ -6,7 +6,7 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
     /*var itemrecord = this.item;
 	var itemId = itemrecord._id;
 	var itemprices = itemrecord.data;*/
-	var price, storename, storeaddress, lat, lng;
+	var price, storename, storeaddress, lat, lng, postalcode;
     //var distance = 10;
     try {
 	if (itemId != null) {
@@ -17,7 +17,8 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
 			price = itemprices[position].prices.current_price;
 			var storedata = Stores.findOne ({"_id":itemprices[position].location});
 			storename = storedata.franchise;
-			storeaddress = storedata.code;
+			postalcode = storedata.code;
+			storeaddress = storedata.address;
             lat = storedata.lat;
             lng = storedata.lng;
 			//alert ("You can get it for $"+price+" at the "+storename+" at "+storeaddress+"!");
@@ -38,5 +39,5 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
         alert ("Could not find price");
         return null;
     }
-    return {"price":price,"storename":storename,"storeaddress":storeaddress, "lat":lat, "lng":lng};
+    return {"price":price,"storename":storename,"storeaddress":storeaddress, "postalcode":postalcode, "lat":lat, "lng":lng};
 }
