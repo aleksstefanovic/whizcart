@@ -1,0 +1,22 @@
+LIVE DEPLOYMENT:
+mup stop 
+(stop current deployment)
+mup deploy 
+(to rebuild the deployment)
+mup start 
+(to start the newly built deployment)
+
+TO ACCESS TO DATABASE:
+docker exec -it mongodb mongo whizcart
+
+TO BUILD THE ANDROID APP:
+(go under .deploy)
+(builds the app)
+meteor build ./output --server 52.203.168.29:80
+
+(only if you need to generate a new key, this we should only do once)
+keytool -genkey -v -keystore whizcart.keystore -alias whizcart -keyalg RSA -keysize 2048 -validity 10000
+(password is 'batman1jesus2', answer to all questions is 'whizcart', or 'WC' for country code)
+
+jarsigner -keystore whizcart.keystore ../output/android/release-unsigned.apk whizcart
+$ANDROID_HOME/build-tools/25.0.2/zipalign 4 ../output/android/release-unsigned.apk ../output/android/whizcart.apk
