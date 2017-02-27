@@ -410,8 +410,8 @@ class dashboard {
 			else if (franchise == "NoFrills") {
 				return "NF";
 			}
-			else if (franchise == "Soren") {
-				return "SS";
+			else if (franchise == "Loblaws") {
+				return "LB";
 			}
 			else if (franchise == "Conestoga Mall") {
 				return "CM";
@@ -720,7 +720,7 @@ class dashboard {
 		this.itemCards = [];
 		for (var m=0; m < priceObjArray.length; m++) {
 			var priceobj = priceObjArray[m];
-			console.log("PRICE OBJ:"+JSON.stringify(this.price));
+			//console.log("PRICE OBJ:"+JSON.stringify(this.price));
 			var bestPrice = priceobj.price;
 			var position = {
 				lat: priceobj.lat,
@@ -732,16 +732,19 @@ class dashboard {
 			position.address = priceobj.storeaddress;
 
 			this.setStoreOnMap (m, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
-			console.log("creating item card");
+			//console.log("creating item card");
 			var itemCard = {
 				"price":priceobj.price,
 				"storename":priceobj.storename,
-				"storeaddress":priceobj.storeaddress,
-				"postalCode":priceobj.postalCode,
+				"fulladdress":priceobj.storeaddress,
+				"storeaddress":priceobj.storeaddress.substring(0,priceobj.storeaddress.indexOf(',')),
+				"postalCode":priceobj.postalcode,
 				"lat":position.lat,
 				"lng":position.lng,
+				"image": "/storeImages/"+priceobj.storename.trim().replace(' ','')+".jpg",
 				"name":itemName
 			};
+			console.log("CARD:",itemCard);
 			this.itemCards.push(itemCard);
 		}
 
@@ -786,8 +789,8 @@ class dashboard {
 		else if (franchise == "NoFrills") {
 			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFFF00|FF0000';
 		}
-		else if (franchise == "Soren") {
-			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SS|ABCD00|FF0000';
+		else if (franchise == "Loblaws") {
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=LB|CD4000|FFFFFF ';
 		}
 	}
 }

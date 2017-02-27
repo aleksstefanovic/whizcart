@@ -1,5 +1,5 @@
 export default function binarySort (array, key, left, right) {
-    console.log("sorting...");
+    //console.log("sorting...");
 
     var pivot = null;
 
@@ -50,7 +50,7 @@ export default function binarySort (array, key, left, right) {
         pivotValue = array[pivot].location;
     }
     else if (key == 'price') {
-        pivotValue = array[pivot].price;
+        pivotValue = parseFloat(array[pivot].price);
     }
 
     // put the pivot on the right
@@ -69,9 +69,10 @@ export default function binarySort (array, key, left, right) {
         }
       }
       else if (key == 'price') {
-        if(array[v].price < pivotValue) {
+        if(parseFloat(array[v].price) < pivotValue) {
           swap(array, v, storeIndex);
           storeIndex++;
+          //console.log("SWAPPING");
         }
       }
     }
