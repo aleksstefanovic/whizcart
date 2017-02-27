@@ -15,6 +15,7 @@ import { Counts } from 'meteor/tmeasday:publish-counts';
 import addToShoppingList from '../../../../scripts/addToShoppingList.js';
 import addFavItem from '../../../../scripts/addFavItem.js';
 import getPrice from '../../../../scripts/getPrice.js';
+import unifyText from '../../../../scripts/unifyText.js';
 
 class dashboard {
 	constructor($scope, $rootScope, $compile, $timeout, $reactive) {
@@ -245,7 +246,7 @@ class dashboard {
 
 					$scope.showMap = false;
 					$scope.showMap = true;
-
+					console.log($scope.mapMarkers);
 					$scope.$apply();
 				},
 			}
@@ -686,7 +687,8 @@ class dashboard {
 	  	this.reset();
 	  };
 	  getPrice () {
-	  	var itemName = this.searchText;
+	  	var itemName = unifyText(this.searchText);
+	  	console.log("ITEM NAME:"+itemName);
 	  	var itemObj = Items.findOne({"name":itemName});
 	  	var itemId = itemObj._id;
 	  	var itemdata = itemObj.data;
@@ -715,6 +717,7 @@ class dashboard {
 		});
 		this.scope.mapMarkers = [user];
 
+		this.itemCards = [];
 		for (var m=0; m < priceObjArray.length; m++) {
 			var priceobj = priceObjArray[m];
 			console.log("PRICE OBJ:"+JSON.stringify(this.price));
@@ -728,10 +731,15 @@ class dashboard {
 			position.postalCode = priceobj.postalcode;
 			position.address = priceobj.storeaddress;
 
-			this.setStoreOnMap (0, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
+			this.setStoreOnMap (m, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
 			console.log("creating item card");
 			var itemCard = {
 				"price":priceobj.price,
+				"storename":priceobj.storename,
+				"storeaddress":priceobj.storeaddress,
+				"postalCode":priceobj.postalCode,
+				"lat":position.lat,
+				"lng":position.lng,
 				"name":itemName
 			};
 			this.itemCards.push(itemCard);
@@ -780,9 +788,6 @@ class dashboard {
 		}
 		else if (franchise == "Soren") {
 			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=SS|ABCD00|FF0000';
-		}
-		else if (franchise == "Conestoga Mall") {
-			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFEE00|FF0000';
 		}
 	}
 }

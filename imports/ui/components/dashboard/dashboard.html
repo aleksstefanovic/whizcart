@@ -1,16 +1,23 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+
+<!--<form ng-submit="dashboard.test()">
+	Enter text and hit enter:
+	<input type="text" ng-model="text" name="text" />
+	<input type="submit" id="submit" value="Submit" />
+</form>-->
+
+<form style="width: 100%" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.getPrice()">
+	<input type = "text" ng-model = "dashboard.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()" >
+	<input type="submit" id="submit" value="Submit" ng-hide="true"/>
+</form>
+
 <form>
 	<div ng-hide = "dashboard.isLoggedIn">
 		Please Log into FoodHero or Create a New Account!
 	</div>
 
-
-	<br>
-	<div style="width: 100%" ng-show = "dashboard.isLoggedIn">
-		<input type = "text" ng-model = "dashboard.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()">
-	</div>
 	<br>
 
 	<ul ng-show = "dashboard.showMe">
@@ -41,9 +48,13 @@
 	</div>
 
 	<div id="cards" ng-show = "dashboard.hasCards" style="position: static; border-style: dashed; padding-bottom: 100px">
-		<div ng-repeat="card in dashboard.itemCards" style="border-style: solid; width: 10%; height: 100px; position: relative; float: left">
-			 {{card.name}}
-			 {{card.price}}
+		<div ng-repeat="card in dashboard.itemCards" style="border-style: solid; width: 50%; height: 100px; position: relative; float: left">
+			{{card.storename}}
+			{{card.lat}}
+			{{card.lng}}
+			{{card.storeaddress}}
+			{{card.postalCode}}
+			{{card.price}}
 		</div>
 	</div>
 
