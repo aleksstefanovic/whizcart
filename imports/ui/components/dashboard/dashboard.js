@@ -593,7 +593,7 @@ class dashboard {
 												$scope.markers = [];
 												$scope.markers = $scope.mapMarkers; 
 
-				
+
 												$scope.$apply();
 
 												$scope.favouriteStoresCount += 1;
@@ -642,7 +642,7 @@ class dashboard {
 	  	this.sort = sort;
 	  };
 	  distanceChange() {
-	  		this.scope.maxDistance = this.maxDistance; 
+	  	this.scope.maxDistance = this.maxDistance; 
 	  };
 	  change(){
 	  	//console.log("Search text typed in");
@@ -733,6 +733,32 @@ class dashboard {
 
 			this.setStoreOnMap (m, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
 			//console.log("creating item card");
+
+			var imageName;
+			if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("BASICS")){
+				imageName ="FoodBasics";
+			} 
+			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRESHCO"))
+			{
+				imageName = "FreshCo"
+			}
+			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("LOBLAW"))
+			{
+				imageName = "Loblaws"
+			}
+			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRILLS"))
+			{
+				imageName = "NoFrills"
+			}
+			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("SOBEY"))
+			{
+				imageName = "Sobeys"
+			}
+			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("ZEHRS"))
+			{
+				imageName = "Zehrs"
+			}
+
 			var itemCard = {
 				"price":priceobj.price,
 				"storename":priceobj.storename,
@@ -741,7 +767,7 @@ class dashboard {
 				"postalCode":priceobj.postalcode,
 				"lat":position.lat,
 				"lng":position.lng,
-				"image": "/storeImages/"+priceobj.storename.trim().replace(' ','')+".jpg",
+				"image": "/storeImages/"+imageName+".jpg",
 				"name":itemName
 			};
 			console.log("CARD:",itemCard);
@@ -790,7 +816,7 @@ class dashboard {
 			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=NF|FFFF00|FF0000';
 		}
 		else if (franchise == "Loblaws") {
-			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=LB|CD4000|FFFFFF ';
+			return 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=LB|CD4000|FFFFFF	 ';
 		}
 	}
 }
