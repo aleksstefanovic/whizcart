@@ -30,7 +30,6 @@
 
 	<div>
 		<button ng-click = "dashboard.addItemToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Item to Favourites</button>
-		<button ng-click = "dashboard.addToShoppingList()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Item to Shopping List</button>
 		<button ng-click = "dashboard.addStoreToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Store to Favourites</button>
 		<button ng-click = "dashboard.getPrice()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success">Get Best Price</button>
 		<br>
@@ -50,10 +49,14 @@
 	<div id="cards" ng-show = "dashboard.hasCards" style="position: relative;">
 		<div  ng-repeat="card in dashboard.itemCards" style="border-style: solid; border-radius: 10%; width: 200px; height: 200px; position: relative; float: left; border-color: #008000;  margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px">
 			<img src={{card.image}} style="width: 100%; height: 50%; border-top-right-radius: 5%; border-top-left-radius: 5%">
-			<div style="padding-top: 4px; padding-left: 4px; padding-bottom: 4px; padding-right: 4px;">
+			<div style="padding-top: 4px; padding-left: 4px; padding-bottom: 4px; padding-right: 4px; height: 50%">
+				
+				<button ng-click = "dashboard.addToShoppingList(card.childId)" ng-show = "dashboard.isLoggedIn" class = "btn btn-success" style="width:100%"> Add To Shopping List</button>			
 				<p> {{card.storeaddress}} </p>
 				<p> ${{card.price}} </p>
+
 			</div>
+
 		</div>
 	</div>
 
@@ -99,21 +102,23 @@
 
 		<div ng-show = "dashboard.showMeShoppingLists">
 
-			<ul class="nav nav-tabs">
+			<!--<ul class="nav nav-tabs">
 				<li class="active"><a data-toggle="tab" href="#shoppingList">Shopping List</a></li>
-			</ul>
+			</ul>-->
 
-			<div class="tab-content">
+			<!--<div class="tab-content">-->
 				<div id="shoppingList" class="tab-pane fade in active">
 					<h3>Shopping List</h3>
 					<ul>
 						<li ng-repeat="item in dashboard.shoppingList">
-							{{item.name}}
+							Item: {{item.parentItem.name}} 
+							Store: {{item.store.franchise}} : {{item.store.address}}
+							Price: {{item.item.price}}
 						</li>
 					</ul>
 				</div>
 
-			</div>
+			<!--</div>-->
 
 		</div>
 

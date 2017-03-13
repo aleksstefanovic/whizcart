@@ -6,6 +6,7 @@ import uiRouter from 'angular-ui-router';
 import template from './dashboard.html';
 import { Meteor } from 'meteor/meteor'; 
 import {Items} from '../../../api/items/index';
+import {ChildItems} from '../../../api/childItems/index';
 import {Stores} from '../../../api/stores/index';
 import './dashboard.css';
 import getRelevantStores from '../../../../scripts/getRelevantStores.js';
@@ -24,6 +25,7 @@ class dashboard {
 		this.scope = $scope;
 		this.subscribe('stores');
 		this.subscribe('items');
+		this.subscribe('childitems');
 		this.perPage = 10;
 		this.page = 1;
 		this.sort = {
@@ -79,10 +81,18 @@ class dashboard {
             	var shoppingList = userProfile.shoppingLists[0].items;
             	var shoppingListData = [];
             	for (var i in shoppingList) {
-            		var itemObj = Items.findOne({"_id":shoppingList[i]});
-            		if (itemObj != undefined) {
-            			shoppingListData.push(itemObj);
-            		}
+            		try {
+	            		var itemObj = ChildItems.findOne({"_id":shoppingList[i]});
+	            		var parentItemObj = Items.findOne({"_id":itemObj.parentId});
+	            		var storeObj = Stores.findOne({"_id":itemObj.location});
+	            		if (itemObj != undefined && storeObj != undefined) {
+	            			var obj = {"item":itemObj,"store":storeObj, "parentItem":parentItemObj};
+	            			shoppingListData.push(obj);
+	            		}
+	            	}
+	            	catch (e) {
+	            		console.log("ERROR:"+e);
+	            	}
             	}
             	return shoppingListData;
             },
@@ -678,12 +688,13 @@ class dashboard {
 		  }
 		  this.reset();
 		};
-		addToShoppingList(){
-			var itemName = this.searchText;
-			var itemId = Items.findOne({"name":itemName})._id;
-	  	//console.log(itemId);
+	  addToShoppingList(childItemId){
+		//var itemName = this.searchText;
+		//var itemId = Items.findOne({"name":itemName})._id;
+	  	//alert(childItemId);
 	  	var userId = Meteor.user()._id;
-	  	addToShoppingList (itemName, itemId, userId);        
+	  	//var itemCards = this.itemCards;
+	  	addToShoppingList (childItemId, userId);      
 	  	this.reset();
 	  };
 	  getPrice () {
@@ -768,6 +779,7 @@ class dashboard {
 				"lat":position.lat,
 				"lng":position.lng,
 				"image": "/storeImages/"+imageName+".jpg",
+				"childId":priceobj.childId,
 				"name":itemName
 			};
 			console.log("CARD:",itemCard);

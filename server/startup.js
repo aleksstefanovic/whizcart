@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Items } from '../imports/api/items/index';
+import { ChildItems } from '../imports/api/childItems/index';
 import { Stores } from '../imports/api/stores/index';
 
 Meteor.startup(() => {

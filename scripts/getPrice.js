@@ -7,7 +7,7 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
     /*var itemrecord = this.item;
 	var itemId = itemrecord._id;
 	var itemprices = itemrecord.data;*/
-	var price, storename, storeaddress, lat, lng, postalcode;
+	var price, storename, storeaddress, lat, lng, postalcode, childId;
 	var priceResults = [];
     //var distance = 10;
 
@@ -19,6 +19,7 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
 		if (positions.length != 0) {
 		for (var i=0; i < positions.length; i++) {
 			price = itemprices[positions[i]].prices.current_price;
+			childId = itemprices[positions[i]].childId;	
 			var storedata = Stores.findOne ({"_id":itemprices[positions[i]].location});
 			storename = storedata.franchise;
 			postalcode = storedata.code;
@@ -26,7 +27,7 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
             lat = storedata.lat;
             lng = storedata.lng;
             //console.log("PRICE RESULTS:"+priceResults);
-            priceResults.push({"price":price,"storename":storename,"storeaddress":storeaddress, "postalcode":postalcode, "lat":lat, "lng":lng});
+            priceResults.push({"price":price,"storename":storename,"storeaddress":storeaddress, "postalcode":postalcode, "lat":lat, "lng":lng, "childId":childId});
         }
 			//alert ("You can get it for $"+price+" at the "+storename+" at "+storeaddress+"!");
 		}

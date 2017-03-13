@@ -1,5 +1,4 @@
-import { Items } from '../imports/api/items/index';
-export default function addToShoppingList (itemName,itemId,userId) {
+export default function addToShoppingList (itemId,userId) {
     console.log("adding to shopping list...");
     var userProfile = Meteor.users.findOne({"_id":userId}).profile;
     console.log("User profile:",JSON.stringify(userProfile));
