@@ -1,4 +1,5 @@
 import { Stores } from '../imports/api/stores/index';
+import { ChildItems } from '../imports/api/childItems/index';
 import getStores from './getStores.js';
 import getBestStorePrice from './getBestStorePrice.js';
 import binarySort from './binarySort.js';
@@ -18,8 +19,10 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
 		var positions = getBestStorePrice (itemId, storeids);
 		if (positions.length != 0) {
 		for (var i=0; i < positions.length; i++) {
-			price = itemprices[positions[i]].prices.current_price;
+			//price = itemprices[positions[i]].prices.current_price;
 			childId = itemprices[positions[i]].childId;	
+			var childItemObj = ChildItems.findOne({"_id":childId});
+			price = childItemObj.price;
 			var storedata = Stores.findOne ({"_id":itemprices[positions[i]].location});
 			storename = storedata.franchise;
 			postalcode = storedata.code;
