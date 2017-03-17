@@ -1,14 +1,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-
-<!--<form ng-submit="dashboard.test()">
-	Enter text and hit enter:
-	<input type="text" ng-model="text" name="text" />
-	<input type="submit" id="submit" value="Submit" />
-</form>-->
-
-<form style="width: 100%" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.getPrice()">
+<form id="fullWidth" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.getPrice()">
 	<input type = "text" ng-model = "dashboard.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()" >
 	<input type="submit" id="submit" value="Submit" ng-hide="true"/>
 </form>
@@ -38,25 +31,19 @@
 			<input type="checkbox" value="{{stores}}" check-list='checked_stores'> {{stores}}
 		</div>
 
-		<div style="clear: left" ng-show = "dashboard.isLoggedIn" > The following stores are checked: {{checked_stores | json}} </div>
-
-
-		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-show = "dashboard.isLoggedIn" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" style="width: 10% " />
+		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-show = "dashboard.isLoggedIn" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
 
 		<p ng-show = "dashboard.isLoggedIn"> Max Distance: {{maxDistance}}</p>
 	</div>
 
-	<div id="cards" ng-show = "dashboard.hasCards" style="position: relative;">
-		<div  ng-repeat="card in dashboard.itemCards" style="border-style: solid; border-radius: 10%; width: 200px; height: 200px; position: relative; float: left; border-color: #008000;  margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px">
-			<img src={{card.image}} style="width: 100%; height: 50%; border-top-right-radius: 5%; border-top-left-radius: 5%">
-			<div style="padding-top: 4px; padding-left: 4px; padding-bottom: 4px; padding-right: 4px; height: 50%">
-				
+	<div id="cardsDiv" ng-show = "dashboard.hasCards">
+		<div  ng-repeat="card in dashboard.itemCards" class="cards">
+			<img src={{card.image}} class="cardImage">
+			<div class="cardInfo">
 				<button ng-click = "dashboard.addToShoppingList(card.childId)" ng-show = "dashboard.isLoggedIn" class = "btn btn-success" style="width:100%"> Add To Shopping List</button>			
 				<p> {{card.storeaddress}} </p>
 				<p> ${{card.price}} </p>
-
 			</div>
-
 		</div>
 	</div>
 
@@ -90,7 +77,7 @@
 		</ui-gmap-google-map>
 	</div>
 
-	<div style="float: left; position: relative; width: 40%; height: 100%" ng-show = "dashboard.isLoggedIn">
+	<div id="sideBar" ng-show = "dashboard.isLoggedIn">
 
 
 		<button ng-click="dashboard.showShoppingLists()" class = "btn btn-success"> Display Shopping Lists</button>
@@ -107,16 +94,16 @@
 			</ul>-->
 
 			<!--<div class="tab-content">-->
-				<div id="shoppingList" class="tab-pane fade in active">
-					<h3>Shopping List</h3>
-					<ul>
-						<li ng-repeat="item in dashboard.shoppingList">
-							Item: {{item.parentItem.name}} 
-							Store: {{item.store.franchise}} : {{item.store.address}}
-							Price: {{item.item.price}}
-						</li>
-					</ul>
-				</div>
+			<div id="shoppingList" class="tab-pane fade in active">
+				<h3>Shopping List</h3>
+				<ul>
+					<li ng-repeat="item in dashboard.shoppingList">
+						Item: {{item.parentItem.name}} 
+						Store: {{item.store.franchise}} : {{item.store.address}}
+						Price: {{item.item.price}}
+					</li>
+				</ul>
+			</div>
 
 			<!--</div>-->
 

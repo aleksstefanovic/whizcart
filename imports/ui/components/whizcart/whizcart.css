@@ -1,0 +1,41 @@
+html, body {
+	height: 100%;
+}
+
+#wrap {
+	min-height: 100%;
+}
+
+#main {
+	overflow:auto;
+	padding-bottom: 100px;
+}  
+
+#footer {
+	position: relative;
+	margin-top: -1000px; 
+	height: 150px;
+	clear:both;
+	background-color: green;
+} 
+
+#wrap{
+}
+
+
+.column {
+	position: relative; 
+	float: left;
+	color: white;
+}
+
+.column-list {
+	list-style: none; 
+	text-align: left;
+	padding: 10px;
+}
+
+.allFootertext {
+	position: relative;
+	float: right;
+}

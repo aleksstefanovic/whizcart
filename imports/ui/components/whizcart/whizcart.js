@@ -10,6 +10,8 @@ import { name as SecondPage } from '../secondPage/secondPage';
 import { name as AboutUs } from '../aboutUs/aboutUs';
 import { name as MainPage } from '../mainPage/mainPage';
 import {name as NavBottom} from '../navBottom/navBottom';
+import './whizcart.css';
+
 class WhizCart {}
 
 const name = 'whizcart';

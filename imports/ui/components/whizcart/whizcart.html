@@ -1,50 +1,6 @@
-<style>
-
-	html, body {
-		height: 100%;
-	}
-
-	#wrap {
-		min-height: 100%;
-	}
-
-	#main {
-		overflow:auto;
-		padding-bottom: 100px;
-	}  /* must be same height as the footer */
-
-	#footer {
-		position: relative;
-		margin-top: -1000px; /* negative value of footer height */
-		height: 150px;
-		clear:both;
-		background-color: green;
-	} 
-
-
-	.column {
-		position: relative; 
-		float: left;
-		color: white
-	}
-
-	.column-list {
-		list-style: none; 
-		text-align: left;
-		padding: 10px;
-	}
-
-	.allFootertext {
-		position: relative;
-		float: right;
-	}
-
-</style>
-
-
 <div id="wrap">
 	<navigation class = "navbar navbar-static-top" > </navigation>
-	<div ui-view="" class = "container-fluid" style="margin-bottom: 100px; padding-bottom: 10px"></div>
+	<div ui-view="" class = "container-fluid" style="margin-bottom: 100px; padding-bottom: 10px;"></div>
 </div>
 
 <div id="footer">

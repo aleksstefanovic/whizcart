@@ -1,8 +1,7 @@
 import angular from 'angular';
 import angularMeteor from 'angular-meteor';
-
+import './navigation.css';
 import template from './navigation.html';
-
 const name = 'navigation';
 
 
