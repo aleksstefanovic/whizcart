@@ -8,8 +8,9 @@ Items.allow({
   insert(userId, item) {
     return userId && item.owner === userId;
   },
-  update(userId, item, fields, modifier) {
-    return userId && item.owner === userId;
+  update(userId, item, fields, modifiers) {
+    //return userId && item.owner === userId;
+    return true;
   },
   remove(userId, item) {
     return userId && item.owner === userId;

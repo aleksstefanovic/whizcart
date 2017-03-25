@@ -8,10 +8,21 @@ export default function getBestStorePrice (itemid, storeids) {
 	var price = -1;
 	var itemrecord = Items.findOne({"_id":itemid}).data;
 	itemrecord = binarySort(itemrecord, 'location');
+	//var userId = Meteor.user()._id;
+    Items.update({
+    	_id: itemid
+	}, 
+	{
+	    $set: 
+	    {
+	        data: itemrecord
+	    }
+	});
 	for (var i=0; i < storeids.length; i++) {
 		//	console.log("Needle for binary search:"+storeids[i]);
 		//console.log("Item Record:"+JSON.stringify(itemrecord));
 		var pos = binarySearch (itemrecord, storeids[i]);
+		//alert("Position in binary search:"+pos + " for: " + storeids[i] + " item record is:"+JSON.stringify(itemrecord));
 		//console.log("Returned by binary search:"+pos);
         var itemobj = itemrecord[pos];
         //console.log("PUT SOME TEXT IN FRON LIKE:"+itemobj);

@@ -14,7 +14,7 @@ export default function getStores (distance, franchise, userLocation) {
             idArray.push(storeobj._id);
         }
 	}
-	console.log("ARRAY OF STORE IDs:"+idArray);
+	//alert("ARRAY OF STORE IDs:"+JSON.stringify(idArray));
 	return idArray;
 }
 
@@ -24,7 +24,7 @@ function getStoresGoogleMaps (distance,franchises, userLocation) {
             var postalCodes = [];
 
             relevantStoresToSearch = getRelevantStores(userLocation, franchises, distance, roughLatDifference, roughLngDifference);
-            console.log(relevantStoresToSearch);
+            //alert("Relevant stores:"+JSON.stringify(relevantStoresToSearch));
             for (var i=0; i < relevantStoresToSearch.length; i++) {
                 postalCodes.push(relevantStoresToSearch[i].code);
             }

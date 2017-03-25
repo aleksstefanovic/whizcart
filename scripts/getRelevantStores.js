@@ -13,6 +13,7 @@ export default function getRelevantStores(userLocation, franchises, maxDistance,
     //console.log("ITEMS?:"+JSON.stringify(itemscursor));
 	//console.log("CURSOR:",storescursor);
     //console.log("STORES?:"+JSON.stringify(storescursor));
+    //alert("Max Distance:"+maxDistance);
     storescursor.forEach(function (storeInDatabase) {
         //console.log("STORES?HERE WE GO");
         try {
@@ -26,14 +27,15 @@ export default function getRelevantStores(userLocation, franchises, maxDistance,
           //continue;
           return;
         }
-        console.log(JSON.stringify("USER LOCATION:"+userLocation));
+        //alert("USER LOCATION:"+JSON.stringify(userLocation));
         var straightLineDistance = latLngDistanceCalculator(userLocation.lat, userLocation.lng, storeInDatabase.lat, storeInDatabase.lng)
-        console.log(straightLineDistance + " - " + maxDistance);
+        //alert(straightLineDistance + " - " + maxDistance);
         if ( straightLineDistance > maxDistance){
             console.log("Store " + storeInDatabase.franchise + " at " + storeInDatabase.code + " Failed the 3rd test");
             //continue;
             return;
         }
+        //storeInDatabase.straightLineDistance = straightLineDistance;
         relevantStoresToSearch.push(storeInDatabase);
         console.log(relevantStoresToSearch);
         }

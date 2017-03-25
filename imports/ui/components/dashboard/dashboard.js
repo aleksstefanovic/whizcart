@@ -703,9 +703,10 @@ class dashboard {
 	  	var itemObj = Items.findOne({"name":itemName});
 	  	var itemId = itemObj._id;
 	  	var itemdata = itemObj.data;
-	  	var distance = parseInt(this.maxDistance)	;
+	  	var distance = parseInt(this.maxDistance);
 	  	var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
-	  	var userLocation = Session.get('location');
+	  	var userLocation = this.scope.userLocation;
+	  	//var userLocation = Session.get('location');
 	  	//console.log("USER LOCATION:"+JSON.stringify(userLocation));
 	  	if (userLocation == undefined || userLocation == null) {
 			//alert ("Could not get your location, proceeding globally");
