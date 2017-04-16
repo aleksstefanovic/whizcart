@@ -21,6 +21,7 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
 		for (var i=0; i < positions.length; i++) {
 			//price = itemprices[positions[i]].prices.current_price;
 			childId = itemprices[positions[i]].childId;	
+			console.log("BATMAN: " + childId);
 			var childItemObj = ChildItems.findOne({"_id":childId});
 			price = childItemObj.price;
 			var storedata = Stores.findOne ({"_id":itemprices[positions[i]].location});

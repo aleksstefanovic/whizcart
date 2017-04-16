@@ -82,9 +82,12 @@ class dashboard {
             	var shoppingListData = [];
             	for (var i in shoppingList) {
             		try {
+            			//console.log(shoppingList[i]);
 	            		var itemObj = ChildItems.findOne({"_id":shoppingList[i]});
+	            		//console.log(JSON.stringify(itemObj));
 	            		var parentItemObj = Items.findOne({"_id":itemObj.parentId});
 	            		var storeObj = Stores.findOne({"_id":itemObj.location});
+	            		//console.log("PARENT:",JSON.stringify(parentItemObj),"STORE OBJ:",JSON.stringify(storeObj));
 	            		if (itemObj != undefined && storeObj != undefined) {
 	            			var obj = {"item":itemObj,"store":storeObj, "parentItem":parentItemObj};
 	            			shoppingListData.push(obj);
@@ -94,6 +97,7 @@ class dashboard {
 	            		console.log("ERROR:"+e);
 	            	}
             	}
+            	//console.log("Shopping data:"+JSON.stringify(shoppingListData));
             	return shoppingListData;
             },
             favStores() {
@@ -142,7 +146,7 @@ class dashboard {
 		$scope.allFranchisesInSmartCart = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 		$scope.checked_stores = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 
-		$scope.$watch('checked_stores', function(newValue, oldValue, scope){
+		/*$scope.$watch('checked_stores', function(newValue, oldValue, scope){
 			//console.log("checked_stores Changed!")
 
 			var removed = $(oldValue).not(newValue).get();	// black magic from stack overflow
@@ -165,7 +169,7 @@ class dashboard {
 				}
 				$scope.$apply();
 			} 
-		}, true);
+		}, true);*/
 
 		var _timeout;
 		var lastOpenInfoWindow; 
@@ -180,7 +184,7 @@ class dashboard {
 		$scope.places;
 		$scope.markers=[];
 		$scope.destArray = new google.maps.LatLng;
-		$scope.franchises = $scope.checked_stores;
+		//$scope.franchises = $scope.checked_stores;
 		$scope.returnPostalCodes = [];
 		$scope.relevantStoresToSearch = [];
 		$scope.userLocation;
@@ -653,6 +657,7 @@ class dashboard {
 	  };
 	  distanceChange() {
 	  	this.scope.maxDistance = this.maxDistance; 
+	  	this.getPriceOldSearchText();
 	  };
 	  change(){
 	  	//console.log("Search text typed in");
@@ -697,14 +702,42 @@ class dashboard {
 	  	addToShoppingList (childItemId, userId);      
 	  	this.reset();
 	  };
-	  getPrice () {
-	  	var itemName = unifyText(this.searchText);
+	  getPriceNewSearchText () {
+	  	this.oldSearchText = this.searchText;
+	  	this.getPrice (this.oldSearchText);
+	  };
+	  updateFranchises (store) {
+	  	try {
+			console.log("STORE: "+store);
+			var currentFranchises = this.scope.checked_stores;
+			var newFranchises = currentFranchises;
+			var position = currentFranchises.indexOf(store);
+			if (position > -1) {
+				newFranchises.splice(position, 1);
+			}
+			else {
+				newFranchises.push(store);
+			}
+
+			this.scope.checked_stores = newFranchises;
+			this.getPriceOldSearchText (); 
+		}
+		catch (e) {
+			console.error(e);
+		}
+	  };
+	  getPriceOldSearchText () {
+	  	this.getPrice(this.oldSearchText);
+	  };
+	  getPrice (searchQuery) {		
+	  	var itemName = unifyText(searchQuery);
 	  	console.log("ITEM NAME:"+itemName);
 	  	var itemObj = Items.findOne({"name":itemName});
 	  	var itemId = itemObj._id;
 	  	var itemdata = itemObj.data;
 	  	var distance = parseInt(this.maxDistance);
-	  	var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
+	  	var franchises = this.scope.checked_stores;
+	  	//var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 	  	var userLocation = this.scope.userLocation;
 	  	//var userLocation = Session.get('location');
 	  	//console.log("USER LOCATION:"+JSON.stringify(userLocation));

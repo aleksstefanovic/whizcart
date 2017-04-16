@@ -1,7 +1,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<form id="fullWidth" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.getPrice()">
+<form id="fullWidth" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.getPriceNewSearchText()">
 	<input type = "text" ng-model = "dashboard.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()" >
 	<input type="submit" id="submit" value="Submit" ng-hide="true"/>
 </form>
@@ -24,11 +24,11 @@
 	<div>
 		<button ng-click = "dashboard.addItemToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Item to Favourites</button>
 		<button ng-click = "dashboard.addStoreToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Store to Favourites</button>
-		<button ng-click = "dashboard.getPrice()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success">Get Best Price</button>
+		<button ng-click = "dashboard.getPriceNewSeachText()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success">Get Best Price</button>
 		<br>
 
 		<div style="float: left" ng-repeat="stores in allFranchisesInSmartCart" ng-show = "dashboard.isLoggedIn">
-			<input type="checkbox" value="{{stores}}" check-list='checked_stores'> {{stores}}
+			<input id="franchises" type="checkbox" value="{{stores}}" check-list='checked_stores' ng-click="dashboard.updateFranchises(stores)"> {{stores}}
 		</div>
 
 		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-show = "dashboard.isLoggedIn" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
