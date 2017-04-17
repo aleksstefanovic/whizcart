@@ -11,6 +11,7 @@ import {Stores} from '../../../api/stores/index';
 import './dashboard.css';
 import getRelevantStores from '../../../../scripts/getRelevantStores.js';
 import addFavStore from '../../../../scripts/addFavStore.js';
+import convertToString from '../../../../scripts/convertToString.js';
 import utilsPagination from 'angular-utils-pagination';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 import addToShoppingList from '../../../../scripts/addToShoppingList.js';
@@ -27,11 +28,18 @@ class dashboard {
 		this.subscribe('items');
 		this.subscribe('childitems');
 		this.perPage = 10;
+		this.results = [];
 		this.page = 1;
 		this.sort = {
 			name: 1
 		};
 		this.sort2 = {
+			code: 1
+		};
+		this.sort3 = {
+			code: 1
+		};
+		this.sort4 = {
 			code: 1
 		};
 		this.searchText = '';
@@ -59,14 +67,35 @@ class dashboard {
 						$regex: `.*${this.getReactively('searchText')}.*`,
 						$options : 'i'}
 					},{sort : this.getReactively('sort2')});
+				var storeFranchiseCursor = Stores.find({
+					"franchise": {
+						$regex: `.*${this.getReactively('searchText')}.*`,
+						$options : 'i'}
+					},{sort : this.getReactively('sort3')});
+				var storeAddressCursor = Stores.find({
+					"address": {
+						$regex: `.*${this.getReactively('searchText')}.*`,
+						$options : 'i'}
+					},{sort : this.getReactively('sort4')});
 				var result = [];
 				itemCursor.forEach ( function(item) {
+					item.type = 'item';
 					result.push(item);
 				});
 				storeCursor.forEach ( function(store) {
+					store.type = 'store';
+					result.push(store);
+				});
+				storeFranchiseCursor.forEach ( function(store) {
+					store.type = 'store';
+					result.push(store);
+				});
+				storeAddressCursor.forEach ( function(store) {
+					store.type = 'store';
 					result.push(store);
 				});
                 //alert(result);
+                this.results = result;
                 return result;
             },
             itemsCount() {
@@ -83,7 +112,7 @@ class dashboard {
             	for (var i in shoppingList) {
             		try {
             			//console.log(shoppingList[i]);
-	            		var itemObj = ChildItems.findOne({"_id":shoppingList[i]});
+            			var itemObj = ChildItems.findOne({"_id":shoppingList[i]});
 	            		//console.log(JSON.stringify(itemObj));
 	            		var parentItemObj = Items.findOne({"_id":itemObj.parentId});
 	            		var storeObj = Stores.findOne({"_id":itemObj.location});
@@ -96,7 +125,7 @@ class dashboard {
 	            	catch (e) {
 	            		console.log("ERROR:"+e);
 	            	}
-            	}
+	            }
             	//console.log("Shopping data:"+JSON.stringify(shoppingListData));
             	return shoppingListData;
             },
@@ -140,8 +169,8 @@ class dashboard {
         }
         );
 
-		$scope.showMap = true;
-		
+$scope.showMap = true;
+
 		//console.log("From the constructor inside dashboard.js");
 		$scope.allFranchisesInSmartCart = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 		$scope.checked_stores = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
@@ -657,7 +686,7 @@ class dashboard {
 	  };
 	  distanceChange() {
 	  	this.scope.maxDistance = this.maxDistance; 
-	  	this.getPriceOldSearchText();
+	  	this.updateDashboardOldSearchText();
 	  };
 	  change(){
 	  	//console.log("Search text typed in");
@@ -693,7 +722,7 @@ class dashboard {
 		  }
 		  this.reset();
 		};
-	  addToShoppingList(childItemId){
+		addToShoppingList(childItemId){
 		//var itemName = this.searchText;
 		//var itemId = Items.findOne({"name":itemName})._id;
 	  	//alert(childItemId);
@@ -702,33 +731,53 @@ class dashboard {
 	  	addToShoppingList (childItemId, userId);      
 	  	this.reset();
 	  };
-	  getPriceNewSearchText () {
-	  	this.oldSearchText = this.searchText;
-	  	this.getPrice (this.oldSearchText);
-	  };
 	  updateFranchises (store) {
 	  	try {
-			console.log("STORE: "+store);
-			var currentFranchises = this.scope.checked_stores;
-			var newFranchises = currentFranchises;
-			var position = currentFranchises.indexOf(store);
-			if (position > -1) {
-				newFranchises.splice(position, 1);
-			}
-			else {
-				newFranchises.push(store);
-			}
+	  		console.log("STORE: "+store);
+	  		var currentFranchises = this.scope.checked_stores;
+	  		var newFranchises = currentFranchises;
+	  		var position = currentFranchises.indexOf(store);
+	  		if (position > -1) {
+	  			newFranchises.splice(position, 1);
+	  		}
+	  		else {
+	  			newFranchises.push(store);
+	  		}
 
-			this.scope.checked_stores = newFranchises;
-			this.getPriceOldSearchText (); 
-		}
-		catch (e) {
-			console.error(e);
-		}
+	  		this.scope.checked_stores = newFranchises;
+	  		this.updateDashboardOldSearchText (); 
+	  	}
+	  	catch (e) {
+	  		console.error(e);
+	  	}
 	  };
-	  getPriceOldSearchText () {
+	  updateDashboardNewSearchText () {
+	  	if (this.results.length == 1) {
+	  		if (this.results[0].type == 'item') {
+	  			this.searchText = convertToString(this.results[0].name);
+	  			this.oldSearchText = this.results[0].name;
+	  			this.getPrice (this.oldSearchText);
+	  		}
+	  		else if (this.results[0].type == 'store') {
+	  			this.searchText = convertToString(this.results[0].address);
+	  			this.oldSearchText = this.results[0].code;
+	  			this.getStore (this.oldSearchText);
+	  		}
+
+	  	}
+	  	else {
+	  		alert ("No results");
+	  	}
+
+	  };
+	  updateDashboardOldSearchText () {
 	  	this.getPrice(this.oldSearchText);
 	  };
+
+	  getStore (searchQuery) {
+	  	alert ("sTORE sEARCH!");
+	  };
+
 	  getPrice (searchQuery) {		
 	  	var itemName = unifyText(searchQuery);
 	  	console.log("ITEM NAME:"+itemName);

@@ -1,7 +1,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<form id="fullWidth" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.getPriceNewSearchText()">
+<form id="fullWidth" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.updateDashboardNewSearchText()">
 	<input type = "text" ng-model = "dashboard.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()" >
 	<input type="submit" id="submit" value="Submit" ng-hide="true"/>
 </form>
@@ -15,16 +15,16 @@
 
 	<ul ng-show = "dashboard.showMe">
 		<li ng-repeat="item in dashboard.items">
-			{{item.code}}
 			{{item.franchise}}
 			{{item.name}}
+			{{item.address}}
 		</li>
 	</ul>
 
 	<div>
 		<button ng-click = "dashboard.addItemToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Item to Favourites</button>
 		<button ng-click = "dashboard.addStoreToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Store to Favourites</button>
-		<button ng-click = "dashboard.getPriceNewSeachText()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success">Get Best Price</button>
+		<button ng-click = "dashboard.updateDashboardNewSeachText()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success">Get Best Price</button>
 		<br>
 
 		<div style="float: left" ng-repeat="stores in allFranchisesInSmartCart" ng-show = "dashboard.isLoggedIn">
