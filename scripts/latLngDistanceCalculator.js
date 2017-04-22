@@ -1,4 +1,5 @@
 export default function latLngDistanceCalculator(lat1,lon1,lat2,lon2) {
+    //alert ("user lat1:"+lat1+",user lng:"+lon1+",store lat:"+lat2+",store lng:"+lon2);
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2-lat1);  // deg2rad below
     var dLon = deg2rad(lon2-lon1); 

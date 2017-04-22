@@ -382,6 +382,17 @@ $scope.showMap = true;
 
 		function noUserLocationHTML5(error){
 			//console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
+			var userLocationMarkerInfo = {
+				id: "userLocationMarker", 
+				latitude: 43.659,
+				longitude: -79.397,
+				icon: 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=0|FFFF00|000000'
+			}	
+			$scope.userLocation = {
+				lat: 43.659,
+				lng: -79.397
+			}
+            $scope.mapMarkers.push(userLocationMarkerInfo);
 		}
 		navigator.geolocation.getCurrentPosition(foundUserLocationHTML5, noUserLocationHTML5);
 
@@ -785,13 +796,14 @@ $scope.showMap = true;
 	  	var itemId = itemObj._id;
 	  	var itemdata = itemObj.data;
 	  	var distance = parseInt(this.maxDistance);
+        console.log("DISTANCE IS " + distance);
 	  	var franchises = this.scope.checked_stores;
 	  	//var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 	  	var userLocation = this.scope.userLocation;
 	  	//var userLocation = Session.get('location');
 	  	//console.log("USER LOCATION:"+JSON.stringify(userLocation));
 	  	if (userLocation == undefined || userLocation == null) {
-			//alert ("Could not get your location, proceeding globally");
+			alert ("Could not get your location, proceeding globally");
 			userLocation = '';
 		}
 		//console.log("getting prices:"+itemId+":"+JSON.stringify(itemdata)+":"+distance+":"+JSON.stringify(franchises)+":"+userLocation);
@@ -802,7 +814,7 @@ $scope.showMap = true;
 
 		//console.log(position);
 		//console.log("This.scope", this.scope);
-
+        var user;
 		this.scope.mapMarkers.forEach(function (marker) {
 			if (marker.id == "userLocationMarker"){ 
 				user = marker;
