@@ -1,5 +1,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" ng-href="{{dashboard.specialstyle}}">
 
 <form id="fullWidth" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.updateDashboardNewSearchText()">
 	<input type = "text" ng-model = "dashboard.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()" >
@@ -27,7 +28,7 @@
 		<button ng-click = "dashboard.updateDashboardNewSeachText()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success">Get Best Price</button>
 		<br>
 
-		<div style="float: left" ng-repeat="stores in allFranchisesInSmartCart" ng-show = "dashboard.isLoggedIn">
+		<div id="franchisesCheckBoxes" style="float: left" ng-repeat="stores in allFranchisesInSmartCart" ng-show = "dashboard.isLoggedIn">
 			<input id="franchises" type="checkbox" value="{{stores}}" check-list='checked_stores' ng-click="dashboard.updateFranchises(stores)"> {{stores}}
 		</div>
 
@@ -80,11 +81,11 @@
 	<div id="sideBar" ng-show = "dashboard.isLoggedIn">
 
 
-		<button ng-click="dashboard.showShoppingLists()" class = "btn btn-success"> Display Shopping Lists</button>
+		<button id="shoppingList "ng-click="dashboard.showShoppingLists()" class = "btn btn-success"> Display Shopping Lists</button>
 
-		<button ng-click="dashboard.showFavStores()" class = "btn btn-success"> Display Fav Stores</button>
+		<button id="favStores" ng-click="dashboard.showFavStores()" class = "btn btn-success"> Display Fav Stores</button>
 
-		<button ng-click="dashboard.showFavItems()" class = "btn btn-success"> Display Fav Items</button>
+		<button id="favItems" ng-click="dashboard.showFavItems()" class = "btn btn-success"> Display Fav Items</button>
 
 
 		<div ng-show = "dashboard.showMeShoppingLists">

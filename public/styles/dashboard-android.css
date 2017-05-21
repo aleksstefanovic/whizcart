@@ -1,0 +1,33 @@
+button {
+    height: 50px;
+    width: 100%;
+}
+
+#sideBar {
+    width: 100%;
+}
+
+.angular-google-map-container {
+    float: none;
+    width:100%;
+}
+
+#franchisesCheckBoxes input {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+#slider {
+    width: 100%;
+}
+
+#footer {
+    display: none;
+}
+
+.headerTab {
+    display:none;
+}
+

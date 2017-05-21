@@ -8,8 +8,6 @@ import { Meteor } from 'meteor/meteor';
 import {Items} from '../../../api/items/index';
 import {ChildItems} from '../../../api/childItems/index';
 import {Stores} from '../../../api/stores/index';
-import './dashboard.css';
-import './dashboard-android.css';
 import getRelevantStores from '../../../../scripts/getRelevantStores.js';
 import addFavStore from '../../../../scripts/addFavStore.js';
 import convertToString from '../../../../scripts/convertToString.js';
@@ -19,12 +17,14 @@ import addToShoppingList from '../../../../scripts/addToShoppingList.js';
 import addFavItem from '../../../../scripts/addFavItem.js';
 import getPrice from '../../../../scripts/getPrice.js';
 import unifyText from '../../../../scripts/unifyText.js';
+import './dashboard.css';
 
 class dashboard {
 	constructor($scope, $rootScope, $compile, $timeout, $reactive) {
 		'ngInject'; 
 		$reactive(this).attach($scope);
 		this.scope = $scope;
+        this.specialstyle = null;
 		this.subscribe('stores');
 		this.subscribe('items');
 		this.subscribe('childitems');
@@ -53,6 +53,16 @@ class dashboard {
 
 		this.itemCards = [];
 		this.hasCards = false;
+
+        if (Meteor.isCordova) {
+            if (device.platform == "Android") {
+                this.specialstyle = "styles/dashboard-android.css";  
+                //alert("android version");
+            }
+        }
+        else {
+            //alert("web version");
+        }
 
 		this.helpers(
 		{
@@ -783,7 +793,9 @@ $scope.showMap = true;
 
 	  };
 	  updateDashboardOldSearchText () {
-	  	this.getPrice(this.oldSearchText);
+        if (this.oldSearchText) {
+            this.getPrice(this.oldSearchText);
+        }
 	  };
 
 	  getStore (searchQuery) {
