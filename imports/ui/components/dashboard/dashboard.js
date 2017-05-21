@@ -9,6 +9,7 @@ import {Items} from '../../../api/items/index';
 import {ChildItems} from '../../../api/childItems/index';
 import {Stores} from '../../../api/stores/index';
 import './dashboard.css';
+import './dashboard-android.css';
 import getRelevantStores from '../../../../scripts/getRelevantStores.js';
 import addFavStore from '../../../../scripts/addFavStore.js';
 import convertToString from '../../../../scripts/convertToString.js';
