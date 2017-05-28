@@ -43,7 +43,7 @@ function config($locationProvider, $urlRouterProvider) {
 
   $locationProvider.html5Mode(true);
 
-  $urlRouterProvider.otherwise('/mainPage');
+  $urlRouterProvider.otherwise('/dashboard');
 }
 
 function run($rootScope, $state) {
@@ -52,7 +52,7 @@ function run($rootScope, $state) {
   $rootScope.$on('$stateChangeError',
     (event, toState, toParams, fromState, fromParams, error) => {
       if (error === 'AUTH_REQUIRED') {
-        $state.go('mainPage');
+        $state.go('dashboard');
       }
     }
   );

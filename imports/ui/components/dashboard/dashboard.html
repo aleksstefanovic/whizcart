@@ -2,19 +2,24 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" ng-href="{{dashboard.specialstyle}}">
 
-<form id="fullWidth" ng-show = "dashboard.isLoggedIn" ng-submit="dashboard.updateDashboardNewSearchText()">
-	<input type = "text" ng-model = "dashboard.searchText" class = "form-control" placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()" >
+<form id="fullWidth"  ng-submit="dashboard.updateDashboardNewSearchText()"	> <!--   ng-show = "dashboard.isLoggedIn"-->
+	<div id="logo">
+		<p> WHIZCART </p>
+	</div>	
+
+	<input id="searchBox" type = "text" ng-model = "dashboard.searchText"  class = "form-control"  placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()">
 	<input type="submit" id="submit" value="Submit" ng-hide="true"/>
+	
+	<div id="login-screen" class="login" >
+		<login-buttons></login-buttons>
+	</div>
 </form>
 
 <form>
-	<div ng-hide = "dashboard.isLoggedIn">
-		Please Log into FoodHero or Create a New Account!
-	</div>
 
 	<br>
 
-	<ul ng-show = "dashboard.showMe">
+	<ul id="searchBoxItemList" ng-show = "dashboard.showMe">
 		<li ng-repeat="item in dashboard.items">
 			{{item.franchise}}
 			{{item.name}}
@@ -23,32 +28,32 @@
 	</ul>
 
 	<div>
-		<button ng-click = "dashboard.addItemToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Item to Favourites</button>
-		<button ng-click = "dashboard.addStoreToFavs()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success"> Add Store to Favourites</button>
-		<button ng-click = "dashboard.updateDashboardNewSeachText()" ng-show = "dashboard.isLoggedIn" class = "btn btn-success">Get Best Price</button>
+		<button ng-click = "dashboard.addItemToFavs()" class = "btn btn-success"> Add Item to Favourites</button>
+		<button ng-click = "dashboard.addStoreToFavs()" class = "btn btn-success"> Add Store to Favourites</button>
+		<button ng-click = "dashboard.updateDashboardNewSeachText()" class = "btn btn-success">Get Best Price</button>
 		<br>
 
-		<div id="franchisesCheckBoxes" style="float: left" ng-repeat="stores in allFranchisesInSmartCart" ng-show = "dashboard.isLoggedIn">
+		<div id="franchisesCheckBoxes" style="float: left" ng-repeat="stores in allFranchisesInSmartCart">
 			<input id="franchises" type="checkbox" value="{{stores}}" check-list='checked_stores' ng-click="dashboard.updateFranchises(stores)"> {{stores}}
 		</div>
 
-		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-show = "dashboard.isLoggedIn" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
+		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
 
-		<p ng-show = "dashboard.isLoggedIn"> Max Distance: {{maxDistance}}</p>
+		<p> Max Distance: {{maxDistance}}</p>
 	</div>
 
 	<div id="cardsDiv" ng-show = "dashboard.hasCards">
 		<div  ng-repeat="card in dashboard.itemCards" class="cards">
 			<img src={{card.image}} class="cardImage">
 			<div class="cardInfo">
-				<button ng-click = "dashboard.addToShoppingList(card.childId)" ng-show = "dashboard.isLoggedIn" class = "btn btn-success" style="width:100%"> Add To Shopping List</button>			
+				<!--<button ng-click = "dashboard.addToShoppingList(card.childId)" class = "btn btn-success" style="width:100%"> Add To Shopping List</button>	-->		
 				<p> {{card.storeaddress}} </p>
 				<p> ${{card.price}} </p>
 			</div>
 		</div>
 	</div>
 
-	<div id="map-canvas" ng-if = "dashboard.isLoggedIn" style="clear: both">
+	<div id="map-canvas" style="clear: both">
 
 		<script id="searchBoxUserLocation.tpl.html" type="text/ng-template">
 			<input type="text" placeholder="User Location">
@@ -77,17 +82,17 @@
 			<ui-gmap-search-box options="mapSearchBox.options" template="mapSearchBox.template" events="mapSearchBox.events" bounds="mapSearchBox.bounds" ></ui-gmap-search-box>
 		</ui-gmap-google-map>
 	</div>
-    <button class="btn btn-success" ng-click="dashboard.submitIssue()">Submit Issue</button>
-    <div id="issueBox" ng-show="dashboard.showIssueBox">
-        <textarea id="issueBoxText" rows="4" cols="50" class="form-control" ng-model="dashboard.issueBoxText"> </textarea>
-        <button class="btn btn-success" ng-click="dashboard.sendIssue()">Send</button>
-        <button class="btn btn-success" ng-click="dashboard.cancelIssue()">Cancel</button>
-    </div>
+	<button class="btn btn-success" ng-click="dashboard.submitIssue()">Submit Issue</button>
+	<div id="issueBox" ng-show="dashboard.showIssueBox">
+		<textarea id="issueBoxText" rows="4" cols="50" class="form-control" ng-model="dashboard.issueBoxText"> </textarea>
+		<button class="btn btn-success" ng-click="dashboard.sendIssue()">Send</button>
+		<button class="btn btn-success" ng-click="dashboard.cancelIssue()">Cancel</button>
+	</div>
 
-	<div id="sideBar" ng-show = "dashboard.isLoggedIn">
+	<div id="sideBar">
 
 
-		<button id="shoppingList "ng-click="dashboard.showShoppingLists()" class = "btn btn-success"> Display Shopping Lists</button>
+		<!--<button id="shoppingList "ng-click="dashboard.showShoppingLists()" class = "btn btn-success"> Display Shopping Lists</button>-->
 
 		<button id="favStores" ng-click="dashboard.showFavStores()" class = "btn btn-success"> Display Fav Stores</button>
 

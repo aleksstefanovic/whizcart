@@ -14,28 +14,29 @@ html, body {
 #footer {
 	position: relative;
 	margin-top: -1000px; 
-	height: 150px;
 	clear:both;
 	background-color: green;
-} 
-
-#wrap{
 }
 
+table {
+	margin-right: 20px; 
+	margin-top:20px; 
+	width: 100%;
 
-.column {
-	position: relative; 
-	float: left;
+}
+
+tr th {
+	padding-top: 30px;
+	padding-left: 0px; 
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin: auto;
 	color: white;
-}
-
-.column-list {
-	list-style: none; 
-	text-align: left;
-	padding: 10px;
+	text-align: center;
+	border: red;
+	border-style: dotted;
 }
 
 .allFootertext {
 	position: relative;
-	float: right;
 }
