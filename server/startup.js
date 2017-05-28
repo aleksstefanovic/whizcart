@@ -36,4 +36,13 @@ Meteor.startup(() => {
  
       Stores.insert(store)
   }*/
+     process.env.MAIL_URL = "smtp://whizzkart@gmail.com:GeneralPhnksSabetMan@smtp.gmail.com:587";
+     Meteor.methods({
+      sendEmail(subject, text) {
+        this.unblock();
+        console.log(subject, text);
+        var email = "whizzkart@gmail.com";
+        Email.send({ to:email, from:email, subject:subject, text:text });
+      }
+    });
 });

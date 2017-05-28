@@ -1,6 +1,4 @@
 .angular-google-map-container {
-	border-style: dotted;
-	border-color: red;
 	position: relative;
 	float: left;
 	/*top: 0;
@@ -77,4 +75,8 @@ html, body{
 	position: relative; 
 	width: 40%; 
 	height: 100%;
+}
+#issueBox {
+    position:fixed;
+    float: right;
 }

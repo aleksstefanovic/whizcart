@@ -9,6 +9,7 @@ import {Items} from '../../../api/items/index';
 import {ChildItems} from '../../../api/childItems/index';
 import {Stores} from '../../../api/stores/index';
 import getRelevantStores from '../../../../scripts/getRelevantStores.js';
+import sendEmail from '../../../../scripts/sendEmail.js';
 import addFavStore from '../../../../scripts/addFavStore.js';
 import convertToString from '../../../../scripts/convertToString.js';
 import utilsPagination from 'angular-utils-pagination';
@@ -25,6 +26,8 @@ class dashboard {
 		$reactive(this).attach($scope);
 		this.scope = $scope;
         this.specialstyle = null;
+        this.showIssueBox = false;
+        this.issueBoxText = "";
 		this.subscribe('stores');
 		this.subscribe('items');
 		this.subscribe('childitems');
@@ -710,6 +713,23 @@ $scope.showMap = true;
 	  	this.scope.maxDistance = this.maxDistance; 
 	  	this.updateDashboardOldSearchText();
 	  };
+        submitIssue () {
+            this.showIssueBox = true;
+        };
+        sendIssue () {
+            //alert(this.issueBoxText);
+            var userId = Meteor.user()._id;
+            var emailBody = this.issueBoxText;
+            this.issueBoxText = "Sending message...";
+            sendEmail (emailBody, userId);
+            this.issueBoxText = "Message sent!";
+            this.issueBoxText = "";
+            this.showIssueBox = false;
+        };
+        cancelIssue () {
+            this.issueBoxText = "";
+            this.showIssueBox = false;
+        };
 	  change(){
 	  	//console.log("Search text typed in");
 	  	if (this.searchText === ''){
