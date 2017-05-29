@@ -13,7 +13,8 @@ html, body {
 
 #footer {
 	position: relative;
-	margin-top: -1000px; 
+	margin-bottom: 0px;
+	padding-bottom: 0px;
 	clear:both;
 	background-color: green;
 }
@@ -35,6 +36,10 @@ tr th {
 	text-align: center;
 	border: red;
 	border-style: dotted;
+}
+
+tr th a {
+	color: white;
 }
 
 .allFootertext {

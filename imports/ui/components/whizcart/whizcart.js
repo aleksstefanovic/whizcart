@@ -8,6 +8,7 @@ import { name as ItemDetails } from '../itemDetails/itemDetails';
 import { name as ExtraPage } from '../extraPage/extraPage';
 import { name as SecondPage } from '../secondPage/secondPage';
 import { name as AboutUs } from '../aboutUs/aboutUs';
+import { name as ContactUs } from '../contactUs/contactUs';
 import { name as MainPage } from '../mainPage/mainPage';
 import {name as NavBottom} from '../navBottom/navBottom';
 import './whizcart.css';
@@ -26,6 +27,7 @@ export default angular.module(name, [
   MainPage,
   SecondPage,
   AboutUs,
+  ContactUs, 
   ItemDetails,
   Navigation,
   NavBottom,

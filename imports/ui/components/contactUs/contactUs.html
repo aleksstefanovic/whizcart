@@ -1,0 +1,7 @@
+
+<button class="btn btn-success" ng-click="contactUs.submitIssue()">Submit Issue</button>
+<div id="issueBox" ng-show="contactUs.showIssueBox">
+	<textarea id="issueBoxText" rows="4" cols="50" class="form-control" ng-model="contactUs.issueBoxText"> </textarea>
+	<button class="btn btn-success" ng-click="contactUs.sendIssue()">Send</button>
+	<button class="btn btn-success" ng-click="contactUs.cancelIssue()">Cancel</button>
+</div>

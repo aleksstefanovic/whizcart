@@ -82,12 +82,7 @@
 			<ui-gmap-search-box options="mapSearchBox.options" template="mapSearchBox.template" events="mapSearchBox.events" bounds="mapSearchBox.bounds" ></ui-gmap-search-box>
 		</ui-gmap-google-map>
 	</div>
-	<button class="btn btn-success" ng-click="dashboard.submitIssue()">Submit Issue</button>
-	<div id="issueBox" ng-show="dashboard.showIssueBox">
-		<textarea id="issueBoxText" rows="4" cols="50" class="form-control" ng-model="dashboard.issueBoxText"> </textarea>
-		<button class="btn btn-success" ng-click="dashboard.sendIssue()">Send</button>
-		<button class="btn btn-success" ng-click="dashboard.cancelIssue()">Cancel</button>
-	</div>
+	
 
 	<div id="sideBar">
 
