@@ -21,10 +21,10 @@
 
 	<ul id="searchBoxItemList" ng-show = "dashboard.showMe">
 		<li ng-repeat="item in dashboard.items">
+			{{item.category}}: 
 			{{item.franchise}}
 			{{item.name}}
 			{{item.address}}
-			{{item.category}}
 		</li>
 	</ul>
 

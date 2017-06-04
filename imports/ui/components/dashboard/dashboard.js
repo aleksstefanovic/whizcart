@@ -817,12 +817,10 @@ $scope.showMap = true;
 	  			this.oldSearchText = this.results[0].code;
 	  			this.getStore (this.oldSearchText);
 	  		}
-
 	  	}
 	  	else {
 	  		alert ("No results");
 	  	}
-
 	  };
 	  updateDashboardOldSearchText () {
         if (this.oldSearchText) {
