@@ -46,8 +46,8 @@ class dashboard {
 		this.sort4 = {
 			code: 1
 		};
-		this.sort5 = {
-			category: 1
+		this.sort5 = { // didn't fully understand this part either. 
+			name: 1
 		};
 		this.searchText = '';
 		this.maxDistance;
@@ -104,9 +104,9 @@ class dashboard {
 					item.type = 'item';
 					result.push(item);
 				});
-				categoryCursor.forEach(function(category){
-					category.type = 'category';
-					result.push(category);
+				categoryCursor.forEach(function(item, category){
+					item.type = 'category'; // Didn't fully understand this part
+					result.push(item);
 				})
 				storeCursor.forEach ( function(store) {
 					store.type = 'store';
