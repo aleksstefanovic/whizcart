@@ -46,6 +46,9 @@ class dashboard {
 		this.sort4 = {
 			code: 1
 		};
+		this.sort5 = {
+			category: 1
+		};
 		this.searchText = '';
 		this.maxDistance;
 		this.showMe = false;
@@ -76,6 +79,11 @@ class dashboard {
 						$regex: `.*${this.getReactively('searchText')}.*`,
 						$options : 'i'}
 					},{sort : this.getReactively('sort')});
+				var categoryCursor = Items.find({
+					"category": {
+						$regex: `.*${this.getReactively('searchText')}.*`,
+						$options : 'i'}
+					},{sort : this.getReactively('sort5')});
 				var storeCursor = Stores.find({
 					"code": {
 						$regex: `.*${this.getReactively('searchText')}.*`,
@@ -96,6 +104,10 @@ class dashboard {
 					item.type = 'item';
 					result.push(item);
 				});
+				categoryCursor.forEach(function(category){
+					category.type = 'category';
+					result.push(category);
+				})
 				storeCursor.forEach ( function(store) {
 					store.type = 'store';
 					result.push(store);
