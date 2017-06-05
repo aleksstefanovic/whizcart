@@ -16,7 +16,7 @@ html, body {
 	margin-bottom: 0px;
 	padding-bottom: 0px;
 	clear:both;
-	background-color: green;
+	background-color: #5CB85C;
 }
 
 table {
@@ -34,8 +34,6 @@ tr th {
 	margin: auto;
 	color: white;
 	text-align: center;
-	border: red;
-	border-style: dotted;
 }
 
 tr th a {

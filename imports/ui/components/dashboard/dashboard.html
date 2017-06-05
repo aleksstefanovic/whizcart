@@ -3,16 +3,16 @@
 <link rel="stylesheet" ng-href="{{dashboard.specialstyle}}">
 
 <form id="fullWidth"  ng-submit="dashboard.updateDashboardNewSearchText()"	> <!--   ng-show = "dashboard.isLoggedIn"-->
-	<div id="logo">
-		<p> WHIZCART </p>
-	</div>	
+	<img src="/icons/whizcarticon.png" id="logo">
 
-	<input id="searchBox" type = "text" ng-model = "dashboard.searchText"  class = "form-control"  placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()">
-	<input type="submit" id="submit" value="Submit" ng-hide="true"/>
-	
-	<div id="login-screen" class="login" >
-		<login-buttons></login-buttons>
-	</div>
+	<div id="titleBar">
+		<input id="searchBox" type = "text" ng-model = "dashboard.searchText"  class = "form-control"  placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()">
+		<input type="submit" id="submit" value="Submit" ng-hide="true"/>
+
+		<div id="login-screen" class="login" >
+			<login-buttons></login-buttons>
+		</div>
+	</div> 
 </form>
 
 <form>
@@ -34,9 +34,9 @@
 		<button ng-click = "dashboard.updateDashboardNewSeachText()" class = "btn btn-success">Get Best Price</button>
 		<br>
 
-		<div id="franchisesCheckBoxes" style="float: left" ng-repeat="stores in allFranchisesInSmartCart">
+		<!--<div id="franchisesCheckBoxes" style="float: left" ng-repeat="stores in allFranchisesInSmartCart">
 			<input id="franchises" type="checkbox" value="{{stores}}" check-list='checked_stores' ng-click="dashboard.updateFranchises(stores)"> {{stores}}
-		</div>
+		</div>-->
 
 		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
 
