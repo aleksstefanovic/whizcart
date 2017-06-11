@@ -9,14 +9,12 @@ import {Items} from '../../../api/items/index';
 import {ChildItems} from '../../../api/childItems/index';
 import {Stores} from '../../../api/stores/index';
 import getRelevantStores from '../../../../scripts/getRelevantStores.js';
-import sendEmail from '../../../../scripts/sendEmail.js';
 import addFavStore from '../../../../scripts/addFavStore.js';
 import convertToString from '../../../../scripts/convertToString.js';
 import utilsPagination from 'angular-utils-pagination';
 import { Counts } from 'meteor/tmeasday:publish-counts';
 import addToShoppingList from '../../../../scripts/addToShoppingList.js';
 import addFavItem from '../../../../scripts/addFavItem.js';
-import getPrice from '../../../../scripts/getPrice.js';
 import unifyText from '../../../../scripts/unifyText.js';
 import './dashboard.css';
 
@@ -73,7 +71,6 @@ class dashboard {
 		this.helpers(
 		{
 			items() { 
-				//console.log("finding matches");
 				var itemCursor = Items.find({ 
 					"name": {
 						$regex: `.*${this.getReactively('searchText')}.*`,
@@ -137,22 +134,19 @@ class dashboard {
             	var shoppingListData = [];
             	for (var i in shoppingList) {
             		try {
-            			//console.log(shoppingList[i]);
             			var itemObj = ChildItems.findOne({"_id":shoppingList[i]});
-	            		//console.log(JSON.stringify(itemObj));
 	            		var parentItemObj = Items.findOne({"_id":itemObj.parentId});
 	            		var storeObj = Stores.findOne({"_id":itemObj.location});
-	            		//console.log("PARENT:",JSON.stringify(parentItemObj),"STORE OBJ:",JSON.stringify(storeObj));
 	            		if (itemObj != undefined && storeObj != undefined) {
 	            			var obj = {"item":itemObj,"store":storeObj, "parentItem":parentItemObj};
 	            			shoppingListData.push(obj);
 	            		}
 	            	}
 	            	catch (e) {
-	            		console.log("ERROR:"+e);
+	            		Meteor.call('logToConsole',"ERROR:"+e);
+	            		Meteor.call('logToConsole',"ERROR:"+e);
 	            	}
 	            }
-            	//console.log("Shopping data:"+JSON.stringify(shoppingListData));
             	return shoppingListData;
             },
             favStores() {
@@ -180,13 +174,11 @@ class dashboard {
             	var favItems = userProfile.favItems;
             	var favItemData = [];
             	for (var i in favItems) {
-            		//console.log("Item:"+i);
             		var itemObj = Items.findOne({"_id":favItems[i]});
             		if (itemObj != undefined) {
             			favItemData.push(itemObj);
             		}
             	}
-            	//console.log("fav item data:"+JSON.stringify(favItemData));
             	return favItemData;
             },
             isLoggedIn() {
@@ -197,34 +189,9 @@ class dashboard {
 
 $scope.showMap = true;
 
-		//console.log("From the constructor inside dashboard.js");
 		$scope.allFranchisesInSmartCart = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 		$scope.checked_stores = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 
-		/*$scope.$watch('checked_stores', function(newValue, oldValue, scope){
-			//console.log("checked_stores Changed!")
-
-			var removed = $(oldValue).not(newValue).get();	// black magic from stack overflow
-			var added = $(newValue).not(oldValue).get();
-
-			//console.log("Removed: " + removed);
-			//console.log("Added: " + added);
-
-			if (removed == "" && added != ""){ // If a store was added to the list
-				postalCodeChanged($scope.userLocationSearchBox2);
-			} 
-			else if (removed != "" && added == ""){ // If removed
-				//console.log("nothing added!");
-				var franchiseReturnCode = setFranchiseReturnCode(removed);
-
-				for (i = $scope.existingStoreMarkers.length - 1; i >= 0; i--) {
-					if ($scope.existingStoreMarkers[i].id.includes(franchiseReturnCode)){
-						$scope.existingStoreMarkers.splice(i,1);
-					}
-				}
-				$scope.$apply();
-			} 
-		}, true);*/
 
 		var _timeout;
 		var lastOpenInfoWindow; 
@@ -239,7 +206,6 @@ $scope.showMap = true;
 		$scope.places;
 		$scope.markers=[];
 		$scope.destArray = new google.maps.LatLng;
-		//$scope.franchises = $scope.checked_stores;
 		$scope.returnPostalCodes = [];
 		$scope.relevantStoresToSearch = [];
 		$scope.userLocation;
@@ -260,7 +226,6 @@ $scope.showMap = true;
 				click: function(marker, eventName, model, arguments){
 					$scope.map.window.model = model;
 					$scope.map.window.show = true;
-					//console.log("CLICKED ON A MARKER BRO ");	
 				}
 			},
 			window: {
@@ -279,28 +244,15 @@ $scope.showMap = true;
 				tilesloaded: function (map) {
 					$scope.$apply(function () {
 						$scope.actualMapObj = map;
-						//console.info('this is the map instance', map);
 					});
 				},
 
-				/*mouseover: function(map){
-					console.log("Inside Mouseover");
-					$scope.map.options.scrollwheel = false;
-					console.log($scope.map.options.scrollwheel);
-				},	*/
 
 				mouseout: function(map){
-					//console.log("Mouse left map!");
 					$scope.map.options.scrollwheel = false;
-					//console.log($scope.map.options.scrollwheel);
-					//console.log($scope.mapMarkers);
-					//console.log($scope.existingStoreMarkers);
 				},
 
 				bounds_changed: function(map) {
-					//console.log("Map bounds_Changed event fired!");
-					//console.log($scope.markers);
-					//console.log($scope.existingStoreMarkers);
 
 					$scope.bounds = map.getBounds();
 					$scope.ne = $scope.bounds.getNorthEast();
@@ -315,7 +267,7 @@ $scope.showMap = true;
 
 					$scope.showMap = false;
 					$scope.showMap = true;
-					console.log($scope.mapMarkers);
+					Meteor.call('logToConsole', $scope.mapMarkers);
 					$scope.$apply();
 				},
 			}
@@ -324,19 +276,14 @@ $scope.showMap = true;
 		$scope.onClick = function(marker, eventName, model) {
 
 			if (marker.key == "userLocationMarker"){
-				//console.log("User location marker, quitting function");
 				return 
 			}
 
 
-			//console.log("Marker Clicked Two!");
-			//console.log("MARKER KEY: " + marker.key);
 			var lng, lat;
 
 			$scope.mapMarkers.forEach(function(mapMarker) {
 				if (marker.key == mapMarker.id) {
-					//console.log(mapMarker.id);
-					//console.log(mapMarker.fullName);
 					$scope.fullName = mapMarker.fullName;
 					$scope.fullAddress = mapMarker.fullAddress;
 					$scope.postalCode = mapMarker.postalCode;
@@ -346,28 +293,23 @@ $scope.showMap = true;
 				}
 			});
 
-			//console.log($scope.mapMarkers)
 
 			$scope.favouritesButtonClicked = function() {
-				//console.log("FavouritesButtonClicked!",$scope.postalCode);
 				var postalCode = $scope.postalCode;
 				var storeObj = Stores.findOne({"code":postalCode});
 
 				var storeId = storeObj._id;
 				var storeFran = storeObj.franchise;
-				//console.log(storeId);
 				var userId = Meteor.user()._id;
 				var response = addFavStore(postalCode, storeFran,storeId,userId);
 			}
 
 			model.show = !model.show;
 			$scope.activeModel = model;
-			//console.log($scope.activeModel.show);
 		};  
 
 		$('.angular-google-map-container').click(function(){
 			$scope.map.options.scrollwheel = true;
-			//console.log($scope.map.options.scrollwheel);
 		})
 
 		$(window).scroll(function(){
@@ -407,7 +349,6 @@ $scope.showMap = true;
 		}
 
 		function noUserLocationHTML5(error){
-			//console.log('code: ' + error.code + '\n' + 'message: ' + error.message + '\n');
 			var userLocationMarkerInfo = {
 				id: "userLocationMarker", 
 				latitude: 43.659,
@@ -453,9 +394,6 @@ $scope.showMap = true;
 			enableEventPropagation: true
 		};
 
-		$scope.chkBoxChanged = function(){
-			//console.log("Check box changed!");
-		}
 
 		function populateDestinationArray(relevantStoresToSearch, destArray){
 			for (var i = 0; i < relevantStoresToSearch.length; i++){
@@ -501,7 +439,6 @@ $scope.showMap = true;
 
 		function postalCodeChanged(searchbox){
 
-			//console.log($scope.mapMarkers);
 			for(index in $scope.mapMarkers)
 			{
 				if ($scope.mapMarkers[index].id == "userLocationMarker"){
@@ -518,11 +455,10 @@ $scope.showMap = true;
 
 
 			if($scope.places.length == 0){
-				console.log("User location not found!");
+				Meteor.call('logToConsole', "User location not found!");
 				return;
 			}
 			else{
-				//console.log("Succesfully found user location!")
 
 				$scope.map.center = $scope.places[0].geometry.location;
 
@@ -531,8 +467,6 @@ $scope.showMap = true;
 					lng: parseFloat($scope.places[0].geometry.location.lng().toFixed(5))
 				}
 
-				//console.log($scope.userLocation.lat);
-				//console.log($scope.userLocation.lng);
 
 				var userLocationMarkerInfo = {
 					id: "userLocationMarker", 
@@ -555,7 +489,6 @@ $scope.showMap = true;
 				_timeout = null;
 
 				if ($scope.userLocation == null){
-					//console.log("No user location, cancelling!");
 					return;
 				}
 				postalCodeChanged($scope.userLocationSearchBox2);
@@ -569,9 +502,7 @@ $scope.showMap = true;
 			},
 			events: {
 				places_changed: function(searchbox) {
-					//console.log("User Location change event fired!");
 					$scope.userLocationSearchBox2 = searchbox;
-					//console.log(searchbox);
 					postalCodeChanged($scope.userLocationSearchBox2);
 				}
 			},
@@ -584,15 +515,11 @@ $scope.showMap = true;
 			},
 			events: { // Favourite stores changed event
 				places_changed: function(searchbox) {
-					//console.log("Inside Favourite Stores places changed event");
 					$scope.$apply(); // This applies the options.bounds settings to the searchbox
 
 					var user;
-					//alert("SCOPE.MARKERS IS THIS LONG: " + $scope.mapMarkers.length);
 					$scope.mapMarkers.forEach(function (marker) {
 						if (marker.id == "userLocationMarker"){ 
-							//alert("CLEARING OLD STORE MARKER");
-							//$scope.mapMarkers.splice($scope.mapMarkers.indexOf(marker),1);
 							user = marker;
 							return;
 						}
@@ -604,7 +531,6 @@ $scope.showMap = true;
 					if($scope.places.length == 0){
 						return;
 					} else {
-						//console.log("Inside favourite stores function!");
 
 
 						$scope.favouriteStoresCount = 0;
@@ -629,8 +555,6 @@ $scope.showMap = true;
 						};
 
 						$scope.places.forEach(function(place){
-							//console.log("inside $scope.places.forEach");
-							//console.log(place);
 
 							var request = {
 								placeId: place.place_id,
@@ -647,12 +571,11 @@ $scope.showMap = true;
 								if (status === google.maps.places.PlacesServiceStatus.OK) {
 									var stop = false;
 
-									console.log(results);
+									Meteor.call('logToConsole', results);
 									results.address_components.forEach(function(category){
-										console.log()
 										category.types.forEach(function(type){
 											if (type == "postal_code") {
-												console.log(category.long_name);
+												Meteor.call('logToConsole', category.long_name);
 
 												$scope.postalCode = category.long_name.trim().replace(' ', '');
 												if ($scope.postalCode.length != 6) {
@@ -660,8 +583,8 @@ $scope.showMap = true;
 												}
 												$scope.fullName = place.name;
 												$scope.fullAddress = place.formatted_address;
-												console.log($scope.fullAddress);
-												console.log($scope.postalCode);
+												Meteor.call('logToConsole', $scope.fullAddress);
+												Meteor.call('logToConsole', $scope.postalCode);
 
 												var result = Stores.findOne({"code": $scope.postalCode});
 												if ( result == null || result == undefined)
@@ -729,11 +652,10 @@ $scope.showMap = true;
             this.showIssueBox = true;
         };
         sendIssue () {
-            //alert(this.issueBoxText);
             var userId = Meteor.user()._id;
             var emailBody = this.issueBoxText;
             this.issueBoxText = "Sending message...";
-            sendEmail (emailBody, userId);
+            Meteor.call('sendEmail', emailBody, userId);
             this.issueBoxText = "Message sent!";
             this.issueBoxText = "";
             this.showIssueBox = false;
@@ -743,7 +665,6 @@ $scope.showMap = true;
             this.showIssueBox = false;
         };
 	  change(){
-	  	//console.log("Search text typed in");
 	  	if (this.searchText === ''){
 	  		this.showMe = false;
 	  		return;
@@ -758,7 +679,6 @@ $scope.showMap = true;
 	  	var storeObj = Stores.findOne({"code":postalCode});
 	  	var storeId = storeObj._id;
 	  	var storeFran = storeObj.franchise;
-	  	//console.log(storeId);
 	  	var userId = Meteor.user()._id;
 	  	var response = addFavStore(postalCode, storeFran,storeId,userId);
 	  	this.reset();
@@ -767,7 +687,6 @@ $scope.showMap = true;
 	  	var itemName = this.searchText;
 	  	try {
 	  		var itemId = Items.findOne({"name":itemName})._id;
-		  	//console.log(itemId);
 		  	var userId = Meteor.user()._id;
 		  	var response = addFavItem(itemName,itemId,userId);
 		  }
@@ -777,17 +696,13 @@ $scope.showMap = true;
 		  this.reset();
 		};
 		addToShoppingList(childItemId){
-		//var itemName = this.searchText;
-		//var itemId = Items.findOne({"name":itemName})._id;
-	  	//alert(childItemId);
-	  	var userId = Meteor.user()._id;
-	  	//var itemCards = this.itemCards;
-	  	addToShoppingList (childItemId, userId);      
-	  	this.reset();
+            var userId = Meteor.user()._id;
+            addToShoppingList (childItemId, userId);      
+            this.reset();
 	  };
 	  updateFranchises (store) {
 	  	try {
-	  		console.log("STORE: "+store);
+	  		Meteor.call('logToConsole', "STORE: "+store);
 	  		var currentFranchises = this.scope.checked_stores;
 	  		var newFranchises = currentFranchises;
 	  		var position = currentFranchises.indexOf(store);
@@ -834,108 +749,95 @@ $scope.showMap = true;
 
 	  getPrice (searchQuery) {		
 	  	var itemName = unifyText(searchQuery);
-	  	console.log("ITEM NAME:"+itemName);
+	  	Meteor.call('logToConsole',"ITEM NAME:"+itemName);
 	  	var itemObj = Items.findOne({"name":itemName});
 	  	var itemId = itemObj._id;
 	  	var itemdata = itemObj.data;
 	  	var distance = parseInt(this.maxDistance);
-        console.log("DISTANCE IS " + distance);
+        Meteor.call('logToConsole',"DISTANCE IS " + distance);
 	  	var franchises = this.scope.checked_stores;
-	  	//var franchises = ["Food Basics", "Sobeys", "Zehrs", "FreshCo", "NoFrills"];
 	  	var userLocation = this.scope.userLocation;
-	  	//var userLocation = Session.get('location');
-	  	//console.log("USER LOCATION:"+JSON.stringify(userLocation));
 	  	if (userLocation == undefined || userLocation == null) {
 			alert ("Could not get your location, proceeding globally");
 			userLocation = '';
 		}
-		//console.log("getting prices:"+itemId+":"+JSON.stringify(itemdata)+":"+distance+":"+JSON.stringify(franchises)+":"+userLocation);
-		var priceObjArray = getPrice (itemId, itemdata, distance, franchises, userLocation);
-		
-		//console.log(priceobj);
-		//console.log("BEST PRICE FINAL:"+ bestPrice);
 
-		//console.log(position);
-		//console.log("This.scope", this.scope);
-        var user;
-		this.scope.mapMarkers.forEach(function (marker) {
-			if (marker.id == "userLocationMarker"){ 
-				user = marker;
-				return;
-			}
-		});
-		this.scope.mapMarkers = [user];
+		Meteor.call('getPrice', itemId, itemdata, distance, franchises, userLocation, (error, result) => {
+            var priceObjArray = result;
+            if (priceObjArray) {
+                var user;
+                this.scope.mapMarkers.forEach(function (marker) {
+                    if (marker.id == "userLocationMarker"){ 
+                        user = marker;
+                        return;
+                    }
+                });
+                this.scope.mapMarkers = [user];
 
-		this.itemCards = [];
-		for (var m=0; m < priceObjArray.length; m++) {
-			var priceobj = priceObjArray[m];
-			//console.log("PRICE OBJ:"+JSON.stringify(this.price));
-			var bestPrice = priceobj.price;
-			var position = {
-				lat: priceobj.lat,
-				lng: priceobj.lng
-			};
+                this.itemCards = [];
+                for (var m=0; m < priceObjArray.length; m++) {
+                    var priceobj = priceObjArray[m];
+                    var bestPrice = priceobj.price;
+                    var position = {
+                        lat: priceobj.lat,
+                        lng: priceobj.lng
+                    };
 
-			position.name = priceobj.storename;
-			position.postalCode = priceobj.postalcode;
-			position.address = priceobj.storeaddress;
+                    position.name = priceobj.storename;
+                    position.postalCode = priceobj.postalcode;
+                    position.address = priceobj.storeaddress;
 
-			this.setStoreOnMap (m, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
-			//console.log("creating item card");
+                    this.setStoreOnMap (m, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
 
-			var imageName;
-			if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("BASICS")){
-				imageName ="FoodBasics";
-			} 
-			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRESHCO"))
-			{
-				imageName = "FreshCo"
-			}
-			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("LOBLAW"))
-			{
-				imageName = "Loblaws"
-			}
-			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRILLS"))
-			{
-				imageName = "NoFrills"
-			}
-			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("SOBEY"))
-			{
-				imageName = "Sobeys"
-			}
-			else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("ZEHRS"))
-			{
-				imageName = "Zehrs"
-			}
+                    var imageName;
+                    if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("BASICS")){
+                        imageName ="FoodBasics";
+                    } 
+                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRESHCO"))
+                    {
+                        imageName = "FreshCo"
+                    }
+                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("LOBLAW"))
+                    {
+                        imageName = "Loblaws"
+                    }
+                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRILLS"))
+                    {
+                        imageName = "NoFrills"
+                    }
+                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("SOBEY"))
+                    {
+                        imageName = "Sobeys"
+                    }
+                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("ZEHRS"))
+                    {
+                        imageName = "Zehrs"
+                    }
 
-			var itemCard = {
-				"price":priceobj.price,
-				"storename":priceobj.storename,
-				"fulladdress":priceobj.storeaddress,
-				"storeaddress":priceobj.storeaddress.substring(0,priceobj.storeaddress.indexOf(',')),
-				"postalCode":priceobj.postalcode,
-				"lat":position.lat,
-				"lng":position.lng,
-				"image": "/storeImages/"+imageName+".jpg",
-				"childId":priceobj.childId,
-				"name":itemName
-			};
-			console.log("CARD:",itemCard);
-			this.itemCards.push(itemCard);
-		}
-
-		this.hasCards = true;
-		//console.log("FROM GETPRICE, THIS.USERLOCATIONMARKER");
-		//console.log(this.scope.userLocationMarker);
-
-		//console.log("FROM GETPRICE, THIS.SCOPE.MARKERS:");
-		//console.log(this.scope.markers);
-		//alert ("You can get "+itemObj.name+" for "+bestPrice+" at the "+priceobj.storename+" on "+priceobj.storeaddress+"!");
+                    var itemCard = {
+                        "price":priceobj.price,
+                        "storename":priceobj.storename,
+                        "fulladdress":priceobj.storeaddress,
+                        "storeaddress":priceobj.storeaddress.substring(0,priceobj.storeaddress.indexOf(',')),
+                        "postalCode":priceobj.postalcode,
+                        "lat":position.lat,
+                        "lng":position.lng,
+                        "image": "/storeImages/"+imageName+".jpg",
+                        "childId":priceobj.childId,
+                        "name":itemName
+                    };
+                    Meteor.call('logToConsole',"CARD:",itemCard);
+                    this.itemCards.push(itemCard);
+                }
+                this.hasCards = true;
+            }
+            else {
+                alert("Could not find price");
+            }
+        });
 	};
 	
 	setStoreOnMap(i, franchise, icon, position){
-		//console.log("Inside setStoreOnMap function");
-		//console.log(franchise + i.toString());
 		var existingStoreMarkerInfo = {
 			id: franchise + i.toString(),
 			latitude: position.lat,
