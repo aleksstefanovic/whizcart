@@ -8,14 +8,8 @@ import { Meteor } from 'meteor/meteor';
 import {Items} from '../../../api/items/index';
 import {ChildItems} from '../../../api/childItems/index';
 import {Stores} from '../../../api/stores/index';
-import getRelevantStores from '../../../../scripts/getRelevantStores.js';
-import addFavStore from '../../../../scripts/addFavStore.js';
-import convertToString from '../../../../scripts/convertToString.js';
 import utilsPagination from 'angular-utils-pagination';
 import { Counts } from 'meteor/tmeasday:publish-counts';
-import addToShoppingList from '../../../../scripts/addToShoppingList.js';
-import addFavItem from '../../../../scripts/addFavItem.js';
-import unifyText from '../../../../scripts/unifyText.js';
 import './dashboard.css';
 
 class dashboard {
@@ -301,7 +295,7 @@ $scope.showMap = true;
 				var storeId = storeObj._id;
 				var storeFran = storeObj.franchise;
 				var userId = Meteor.user()._id;
-				var response = addFavStore(postalCode, storeFran,storeId,userId);
+				var response = Meteor.call('addFavStore', postalCode, storeFran,storeId,userId);
 			}
 
 			model.show = !model.show;
@@ -680,26 +674,21 @@ $scope.showMap = true;
 	  	var storeId = storeObj._id;
 	  	var storeFran = storeObj.franchise;
 	  	var userId = Meteor.user()._id;
-	  	var response = addFavStore(postalCode, storeFran,storeId,userId);
+	  	var response = Meteor.call('addFavStore', postalCode, storeFran,storeId,userId);
 	  	this.reset();
 	  };
 	  addItemToFavs(){
-	  	var itemName = this.searchText;
-	  	try {
+            var itemName = this.searchText;
 	  		var itemId = Items.findOne({"name":itemName})._id;
 		  	var userId = Meteor.user()._id;
-		  	var response = addFavItem(itemName,itemId,userId);
-		  }
-		  catch (e) {
-
-		  }
-		  this.reset();
+		  	Meteor.call('addFavItem', itemName,itemId,userId);
+            this.reset();
 		};
 		addToShoppingList(childItemId){
             var userId = Meteor.user()._id;
             addToShoppingList (childItemId, userId);      
             this.reset();
-	  };
+          };
 	  updateFranchises (store) {
 	  	try {
 	  		Meteor.call('logToConsole', "STORE: "+store);
@@ -723,14 +712,18 @@ $scope.showMap = true;
 	  updateDashboardNewSearchText () {
 	  	if (this.results.length == 1) {
 	  		if (this.results[0].type == 'item') {
-	  			this.searchText = convertToString(this.results[0].name);
-	  			this.oldSearchText = this.results[0].name;
-	  			this.getPrice (this.oldSearchText);
+	  			Meteor.call('convertToString', this.results[0].name, (error, result) => {
+                    this.searchText = result;
+                    this.oldSearchText = this.results[0].name;
+                    this.getPrice (this.oldSearchText);
+                });
 	  		}
 	  		else if (this.results[0].type == 'store') {
-	  			this.searchText = convertToString(this.results[0].address);
-	  			this.oldSearchText = this.results[0].code;
-	  			this.getStore (this.oldSearchText);
+	  			Meteor.call('convertToString', this.results[0].address, (error, result) => {
+                    this.searchText = result;
+                    this.oldSearchText = this.results[0].code;
+                    this.getStore (this.oldSearchText);
+                });
 	  		}
 	  	}
 	  	else {
@@ -748,92 +741,95 @@ $scope.showMap = true;
 	  };
 
 	  getPrice (searchQuery) {		
-	  	var itemName = unifyText(searchQuery);
-	  	Meteor.call('logToConsole',"ITEM NAME:"+itemName);
-	  	var itemObj = Items.findOne({"name":itemName});
-	  	var itemId = itemObj._id;
-	  	var itemdata = itemObj.data;
-	  	var distance = parseInt(this.maxDistance);
-        Meteor.call('logToConsole',"DISTANCE IS " + distance);
-	  	var franchises = this.scope.checked_stores;
-	  	var userLocation = this.scope.userLocation;
-	  	if (userLocation == undefined || userLocation == null) {
-			alert ("Could not get your location, proceeding globally");
-			userLocation = '';
-		}
+	  	Meteor.call('unifyText', searchQuery, (error, result) => {
+            var itemName = result;
 
-		Meteor.call('getPrice', itemId, itemdata, distance, franchises, userLocation, (error, result) => {
-            var priceObjArray = result;
-            if (priceObjArray) {
-                var user;
-                this.scope.mapMarkers.forEach(function (marker) {
-                    if (marker.id == "userLocationMarker"){ 
-                        user = marker;
-                        return;
-                    }
-                });
-                this.scope.mapMarkers = [user];
+            Meteor.call('logToConsole',"ITEM NAME:"+itemName);
+            var itemObj = Items.findOne({"name":itemName});
+            var itemId = itemObj._id;
+            var itemdata = itemObj.data;
+            var distance = parseInt(this.maxDistance);
+            Meteor.call('logToConsole',"DISTANCE IS " + distance);
+            var franchises = this.scope.checked_stores;
+            var userLocation = this.scope.userLocation;
+            if (userLocation == undefined || userLocation == null) {
+                alert ("Could not get your location, proceeding globally");
+                userLocation = '';
+            }
 
-                this.itemCards = [];
-                for (var m=0; m < priceObjArray.length; m++) {
-                    var priceobj = priceObjArray[m];
-                    var bestPrice = priceobj.price;
-                    var position = {
-                        lat: priceobj.lat,
-                        lng: priceobj.lng
-                    };
+            Meteor.call('getPrice', itemId, itemdata, distance, franchises, userLocation, (error, result) => {
+                var priceObjArray = result;
+                if (priceObjArray) {
+                    var user;
+                    this.scope.mapMarkers.forEach(function (marker) {
+                        if (marker.id == "userLocationMarker"){ 
+                            user = marker;
+                            return;
+                        }
+                    });
+                    this.scope.mapMarkers = [user];
 
-                    position.name = priceobj.storename;
-                    position.postalCode = priceobj.postalcode;
-                    position.address = priceobj.storeaddress;
+                    this.itemCards = [];
+                    for (var m=0; m < priceObjArray.length; m++) {
+                        var priceobj = priceObjArray[m];
+                        var bestPrice = priceobj.price;
+                        var position = {
+                            lat: priceobj.lat,
+                            lng: priceobj.lng
+                        };
 
-                    this.setStoreOnMap (m, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
+                        position.name = priceobj.storename;
+                        position.postalCode = priceobj.postalcode;
+                        position.address = priceobj.storeaddress;
 
-                    var imageName;
-                    if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("BASICS")){
-                        imageName ="FoodBasics";
-                    } 
-                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRESHCO"))
-                    {
-                        imageName = "FreshCo"
-                    }
-                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("LOBLAW"))
-                    {
-                        imageName = "Loblaws"
-                    }
-                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRILLS"))
-                    {
-                        imageName = "NoFrills"
-                    }
-                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("SOBEY"))
-                    {
-                        imageName = "Sobeys"
-                    }
-                    else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("ZEHRS"))
-                    {
-                        imageName = "Zehrs"
-                    }
+                        this.setStoreOnMap (m, priceobj.storename , this.setDestinationIcon(priceobj.storename), position);
 
-                    var itemCard = {
-                        "price":priceobj.price,
-                        "storename":priceobj.storename,
-                        "fulladdress":priceobj.storeaddress,
-                        "storeaddress":priceobj.storeaddress.substring(0,priceobj.storeaddress.indexOf(',')),
-                        "postalCode":priceobj.postalcode,
-                        "lat":position.lat,
-                        "lng":position.lng,
-                        "image": "/storeImages/"+imageName+".jpg",
-                        "childId":priceobj.childId,
-                        "name":itemName
-                    };
-                    Meteor.call('logToConsole',"CARD:",itemCard);
-                    this.itemCards.push(itemCard);
+                        var imageName;
+                        if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("BASICS")){
+                            imageName ="FoodBasics";
+                        } 
+                        else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRESHCO"))
+                        {
+                            imageName = "FreshCo"
+                        }
+                        else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("LOBLAW"))
+                        {
+                            imageName = "Loblaws"
+                        }
+                        else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("FRILLS"))
+                        {
+                            imageName = "NoFrills"
+                        }
+                        else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("SOBEY"))
+                        {
+                            imageName = "Sobeys"
+                        }
+                        else if (priceobj.storename.trim().replace(' ','').toUpperCase().contains("ZEHRS"))
+                        {
+                            imageName = "Zehrs"
+                        }
+
+                        var itemCard = {
+                            "price":priceobj.price,
+                            "storename":priceobj.storename,
+                            "fulladdress":priceobj.storeaddress,
+                            "storeaddress":priceobj.storeaddress.substring(0,priceobj.storeaddress.indexOf(',')),
+                            "postalCode":priceobj.postalcode,
+                            "lat":position.lat,
+                            "lng":position.lng,
+                            "image": "/storeImages/"+imageName+".jpg",
+                            "childId":priceobj.childId,
+                            "name":itemName
+                        };
+                        Meteor.call('logToConsole',"CARD:",itemCard);
+                        this.itemCards.push(itemCard);
+                    }
+                    this.hasCards = true;
                 }
-                this.hasCards = true;
-            }
-            else {
-                alert("Could not find price");
-            }
+                else {
+                    alert("Could not find price");
+                }
+            });
         });
 	};
 	

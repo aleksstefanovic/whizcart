@@ -1,4 +1,4 @@
-export default function addStoreItem(postalCode, storeFran, storeId, userId) {
+export default function addFavStore(postalCode, storeFran, storeId, userId) {
     console.log("Adding to fav stores...");
     var userProfile = Meteor.users.findOne({"_id":userId}).profile;
     console.log("User profile:",JSON.stringify(userProfile));
