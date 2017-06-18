@@ -4,7 +4,6 @@ import uiRouter from 'angular-ui-router';
 import template from './whizcart.html';
 import { name as dashboard } from '../dashboard/dashboard';
 import { name as Navigation } from '../navigation/navigation';
-import { name as ItemDetails } from '../itemDetails/itemDetails';
 import { name as ExtraPage } from '../extraPage/extraPage';
 import { name as SecondPage } from '../secondPage/secondPage';
 import { name as AboutUs } from '../aboutUs/aboutUs';
@@ -28,7 +27,6 @@ export default angular.module(name, [
   SecondPage,
   AboutUs,
   ContactUs, 
-  ItemDetails,
   Navigation,
   NavBottom,
   'accounts.ui'
