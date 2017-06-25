@@ -29,6 +29,7 @@ function getStoresGoogleMaps (distance,franchises, userLocation) {
                 postalCodes.push(relevantStoresToSearch[i].code);
             }
 
+
 			return postalCodes;
 }
 

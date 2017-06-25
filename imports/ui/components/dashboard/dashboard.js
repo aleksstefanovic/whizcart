@@ -727,14 +727,15 @@ $scope.showMap = true;
                 });
 	  		}
 	  	}
-	  	else {
+	  	else if (this.results.length == 0) {
             var result = this.getStore (this.searchText);
             this.oldSearchText = this.searchText;
 	  	}
 	  };
 	  updateDashboardOldSearchText () {
+	  	//alert("Inside updateDashboardOldSearchText");
         if (this.oldSearchText) {
-            this.getPrice(this.oldSearchText);
+            //this.getPrice(this.oldSearchText);
         }
 	  };
 
@@ -751,6 +752,7 @@ $scope.showMap = true;
 
         var ngObj = this;
         function callback(results, status) {
+        	alert(status);
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 Meteor.call('logToConsole', JSON.stringify(results));
 

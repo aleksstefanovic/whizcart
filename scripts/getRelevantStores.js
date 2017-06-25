@@ -26,7 +26,7 @@ export default function getRelevantStores(userLocation, franchises, maxDistance,
         }*/
 
         relevantStoresToSearch.push(storeInDatabase);
-        console.log(relevantStoresToSearch);
+        //console.log(relevantStoresToSearch);
         }
         catch (e) {
             console.log("Something is wrong with store:"+storeInDatabase._id+e);
