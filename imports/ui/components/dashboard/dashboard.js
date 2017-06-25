@@ -261,7 +261,7 @@ $scope.showMap = true;
 
 					$scope.showMap = false;
 					$scope.showMap = true;
-					Meteor.call('logToConsole', $scope.mapMarkers);
+					//Meteor.call('logToConsole', $scope.mapMarkers);
 					$scope.$apply();
 				},
 			}

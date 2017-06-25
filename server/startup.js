@@ -11,6 +11,8 @@ import unifyText from '../scripts/unifyText.js';
 
 Meteor.startup(() => {
      process.env.MAIL_URL = "smtp://whizzkart@gmail.com:GeneralPhnksSabetMan@smtp.gmail.com:587";
+     //process.env.MOBILE_DDP_URL = 'http://1.1.1.1:3000';
+     //process.env.MOBILE_ROOT_URL = 'http://1.1.1.1:3000';
 
      Meteor.methods({
 

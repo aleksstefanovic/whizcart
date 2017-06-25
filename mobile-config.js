@@ -22,3 +22,4 @@ App.launchScreens({
   'android_xxhdpi_portrait': './public/icons/whizcartsplash.png',
   'android_xxhdpi_landscape': './public/icons/whizcartsplash.png',
 });
+
