@@ -5,6 +5,7 @@ export default function getStores (distance, franchise, userLocation) {
     if (distance == null) {
         distance = 5;
     }
+
     var postalArray = getStoresGoogleMaps (distance, franchise, userLocation);
 	console.log("POSTAL ARRAY RETURNED BY MAPS:" + postalArray);
 	var idArray = [];

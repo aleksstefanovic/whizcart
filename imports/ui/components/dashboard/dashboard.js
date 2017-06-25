@@ -733,14 +733,12 @@ $scope.showMap = true;
 	  	}
 	  };
 	  updateDashboardOldSearchText () {
-	  	//alert("Inside updateDashboardOldSearchText");
         if (this.oldSearchText) {
-            //this.getPrice(this.oldSearchText);
+            this.getPrice(this.oldSearchText);
         }
 	  };
 
 	 getStore (searchQuery) {
-	  	//alert (searchQuery);
         var service = new google.maps.places.PlacesService(this.scope.actualMapObj);
         var userLocation = new google.maps.LatLng(this.scope.mapMarkers[0].latitude, this.scope.mapMarkers[0].longitude);
         var request = {
@@ -752,7 +750,6 @@ $scope.showMap = true;
 
         var ngObj = this;
         function callback(results, status) {
-        	alert(status);
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 Meteor.call('logToConsole', JSON.stringify(results));
 
