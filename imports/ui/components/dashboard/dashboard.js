@@ -230,7 +230,10 @@ $scope.showMap = true;
 				},
 			}, 
 			options: {
-				scrollwheel: true
+				scrollwheel: true,
+				mapTypeControl: false,
+				streetViewControl: false, 
+				zoomControl: false
 			},
 
 			events: {

@@ -21,6 +21,11 @@ button {
 
 #slider {
     width: 100%;
+    display:none;
+}
+
+#distanceAmount {
+    display: none;
 }
 
 #footer {
@@ -31,3 +36,32 @@ button {
     display:none;
 }
 
+.cards{
+    border-style: solid; 
+    border-radius: 10%; 
+    width: 60px; 
+    height: 60px; 
+    position: relative; 
+    float: left; 
+    border-color: #008000;  
+    margin-left: 2px; 
+    margin-right: 2px; 
+    margin-top: 2px; 
+    margin-bottom: 2px;
+}
+
+.cardImage{
+    width: 100%; 
+    height: 50%; 
+    border-top-right-radius: 5%; 
+    border-top-left-radius: 5%;
+}
+
+.cardInfo{
+    font-size: 10px;
+    padding-top: 4px; 
+    padding-left: 4px   ; 
+    padding-bottom: 4px; 
+    padding-right: 4px; 
+    height: 50%;
+}

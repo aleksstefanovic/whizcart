@@ -9,6 +9,8 @@
 		<input id="searchBox" type = "text" ng-model = "dashboard.searchText"  class = "form-control"  placeholder = "Search for item name or store postal code" ng-change = "dashboard.change()" autocomplete="off">
 		<input type="submit" id="submit" value="Submit" ng-hide="true"/>
 
+		<button id="goButton" ng-click = "dashboard.updateDashboardNewSeachText()" class = "btn btn-success"> Search </button>
+
 		<div id="login-screen" class="login" >
 			<login-buttons></login-buttons>
 		</div>
@@ -29,9 +31,9 @@
 	</ul>
 
 	<div>
-		<button ng-click = "dashboard.addItemToFavs()" class = "btn btn-success"> Add Item to Favourites</button>
-		<button ng-click = "dashboard.addStoreToFavs()" class = "btn btn-success"> Add Store to Favourites</button>
-		<button ng-click = "dashboard.updateDashboardNewSeachText()" class = "btn btn-success">Get Best Price</button>
+		<!--<button ng-click = "dashboard.addItemToFavs()" class = "btn btn-success"> Add Item to Favourites</button>
+		<button ng-click = "dashboard.addStoreToFavs()" class = "btn btn-success"> Add Store to Favourites</button>-->
+
 		<br>
 
 		<!--<div id="franchisesCheckBoxes" style="float: left" ng-repeat="stores in allFranchisesInSmartCart">
@@ -40,7 +42,7 @@
 
 		<input id="slider" type="range" min ="5" max="25" step ="5" n ="5" ng-model = "dashboard.maxDistance" ng-change = "dashboard.distanceChange()" />
 
-		<p> Max Distance: {{maxDistance}}</p>
+		<p id="distanceAmount"> Max Distance: {{maxDistance}}</p>
 	</div>
 
 	<div id="cardsDiv" ng-show = "dashboard.hasCards">
@@ -90,9 +92,9 @@
 
 		<!--<button id="shoppingList "ng-click="dashboard.showShoppingLists()" class = "btn btn-success"> Display Shopping Lists</button>-->
 
-		<button id="favStores" ng-click="dashboard.showFavStores()" class = "btn btn-success"> Display Fav Stores</button>
+		<!--<button id="favStores" ng-click="dashboard.showFavStores()" class = "btn btn-success"> Display Fav Stores</button>
 
-		<button id="favItems" ng-click="dashboard.showFavItems()" class = "btn btn-success"> Display Fav Items</button>
+		<button id="favItems" ng-click="dashboard.showFavItems()" class = "btn btn-success"> Display Fav Items</button>-->
 
 
 		<div ng-show = "dashboard.showMeShoppingLists">
