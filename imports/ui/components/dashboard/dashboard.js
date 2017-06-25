@@ -80,11 +80,11 @@ class dashboard {
 						$regex: `.*${this.getReactively('searchText')}.*`,
 						$options : 'i'}
 					},{sort : this.getReactively('sort2')});
-				var storeFranchiseCursor = Stores.find({
+				/*var storeFranchiseCursor = Stores.find({
 					"franchise": {
 						$regex: `.*${this.getReactively('searchText')}.*`,
 						$options : 'i'}
-					},{sort : this.getReactively('sort3')});
+					},{sort : this.getReactively('sort3')});*/
 				var storeAddressCursor = Stores.find({
 					"address": {
 						$regex: `.*${this.getReactively('searchText')}.*`,
@@ -103,10 +103,10 @@ class dashboard {
 					store.type = 'store';
 					result.push(store);
 				});
-				storeFranchiseCursor.forEach ( function(store) {
+				/*storeFranchiseCursor.forEach ( function(store) {
 					store.type = 'store';
 					result.push(store);
-				});
+				});*/
 				storeAddressCursor.forEach ( function(store) {
 					store.type = 'store';
 					result.push(store);
@@ -521,6 +521,7 @@ $scope.showMap = true;
 					$scope.mapMarkers = [user];
 
 					$scope.places = searchbox.getPlaces();
+                    alert("Places " + JSON.stringify(searchbox.getPlaces()));
 
 					if($scope.places.length == 0){
 						return;
@@ -671,10 +672,10 @@ $scope.showMap = true;
 	  addStoreToFavs(){
 	  	var postalCode = this.searchText;
 	  	var storeObj = Stores.findOne({"code":postalCode});
-	  	var storeId = storeObj._id;
-	  	var storeFran = storeObj.franchise;
-	  	var userId = Meteor.user()._id;
-	  	var response = Meteor.call('addFavStore', postalCode, storeFran,storeId,userId);
+        var storeId = storeObj._id;
+        var storeFran = storeObj.franchise;
+        var userId = Meteor.user()._id;
+        var response = Meteor.call('addFavStore', postalCode, storeFran,storeId,userId);
 	  	this.reset();
 	  };
 	  addItemToFavs(){
@@ -727,7 +728,8 @@ $scope.showMap = true;
 	  		}
 	  	}
 	  	else {
-	  		alert ("No results");
+            var result = this.getStore (this.searchText);
+            this.oldSearchText = this.searchText;
 	  	}
 	  };
 	  updateDashboardOldSearchText () {
@@ -736,8 +738,61 @@ $scope.showMap = true;
         }
 	  };
 
-	  getStore (searchQuery) {
-	  	alert ("sTORE sEARCH!");
+	 getStore (searchQuery) {
+	  	//alert (searchQuery);
+        var service = new google.maps.places.PlacesService(this.scope.actualMapObj);
+        var userLocation = new google.maps.LatLng(this.scope.mapMarkers[0].latitude, this.scope.mapMarkers[0].longitude);
+        var request = {
+            "query":searchQuery,
+            "location":userLocation,
+            "radius": 10
+        };
+        service.textSearch(request, callback);
+
+        var ngObj = this;
+        function callback(results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                Meteor.call('logToConsole', JSON.stringify(results));
+
+                ngObj.scope.mapMarkers.forEach(function (marker) {
+                    if (marker.id == "userLocationMarker"){ 
+                        user = marker;
+                        return;
+                    }
+                });
+                ngObj.scope.mapMarkers = [user];
+
+                var storeObj = Stores.findOne({"code":searchQuery});
+                var storename = null;
+                var position = {};
+                if (storeObj) {
+                    storename = storeObj.franchise;
+                    position.name = storename;
+                    position.postalCode = storeObj.code;
+                    position.address = storeObj.address;
+                }
+
+                for (var i=0; i < results.length; i++) {
+                    var place = results[i];
+                    if (!storeObj) {
+                        storename = place.name;
+                        position.name = storename;
+                        var postalText = place.formatted_address.split(",")[2];
+                        position.postalCode = postalText.split(" ")[2] + postalText.split(" ")[3]
+                        position.address = place.formatted_address;
+                    }
+                    position.lat = place.geometry.location.lat();
+                    position.lng = place.geometry.location.lng();
+
+                    ngObj.setStoreOnMap (i, storename, ngObj.setDestinationIcon(storename), position);
+                    if (i === 10) {
+                        break;
+                    }
+                }
+                ngObj.hasCards = false;
+                ngObj.scope.$apply();
+            }
+        };
 	  };
 
 	  getPrice (searchQuery) {		
@@ -824,6 +879,7 @@ $scope.showMap = true;
                         Meteor.call('logToConsole',"CARD:",itemCard);
                         this.itemCards.push(itemCard);
                     }
+                    this.scope.$apply();
                     this.hasCards = true;
                 }
                 else {
