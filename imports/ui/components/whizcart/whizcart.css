@@ -13,8 +13,8 @@ html, body {
 	margin-bottom: 0px;
 	clear:both;
 	background-color: #5CB85C;
-	border-style: dotted;
-	border-color: pink;
+	/*border-style: dotted;
+	border-color: pink;*/
 	overflow: hidden;
 }
 
@@ -22,8 +22,8 @@ html, body {
 #main {
 	float: left;
 	padding-bottom: 0px;
-	border-style: dashed;
-	border-color: blue;
+	/*border-style: dashed;
+	border-color: blue;*/
 	min-height: 100%;
 	width: 100%;
 	overflow: hidden;
