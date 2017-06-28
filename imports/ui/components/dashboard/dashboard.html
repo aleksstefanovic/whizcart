@@ -58,14 +58,15 @@
 
 		
 	</div>
-
-	<div id="cardsDiv" ng-show = "dashboard.hasCards">
-		<div  ng-repeat="card in dashboard.itemCards" class="cards">
-			<img src={{card.image}} class="cardImage">
-			<div class="cardInfo">
-				<button ng-click = "dashboard.addToShoppingList(card.childId)" class = "btn btn-success" style="width:100%"> Add To Shopping List</button>			
-				<p> {{card.storeaddress}} </p>
-				<p> ${{card.price}} </p>
+	<div id="cardsDivParent">
+	<div ng-show = "dashboard.hasCards">
+			<div  ng-repeat="card in dashboard.itemCards" class="cards">
+				<img src={{card.image}} class="cardImage">
+				<div class="cardInfo">
+					<button ng-click = "dashboard.addToShoppingList(card.childId)" class = "btn btn-success" style="width:100%"> Add To Shopping List</button>			
+					<p> {{card.storeaddress}} </p>
+					<p> ${{card.price}} </p>
+				</div>
 			</div>
 		</div>
 	</div>

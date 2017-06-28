@@ -52,7 +52,7 @@ html, body{
 	background-color: #5CB85C;
 }
 
-#cardsDiv{
+#cardsDivParent{
 	position: relative;
 	/*border-style: dashed;
 	border-color: red;*/
@@ -61,6 +61,7 @@ html, body{
 	background-image: url("http://wonderopolis.org/wp-content/uploads/2010/11/Wonder-46-Cornucopia-Static-Image.jpg");
 	height: 100%;
 	width: 100%;
+	background-size: 100% 100%;
 }
 
 .cards{
@@ -143,7 +144,7 @@ html, body{
 }
 
 #searchBoxItemList {
-	width: 69.45%;
+	width: 69.95%;
 	font-family: Helvetica;
 	float: left;
 	margin-bottom: 0px;
