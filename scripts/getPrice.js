@@ -53,5 +53,5 @@ export default function getPrice (itemId,itemprices,distance,franchises, userLoc
     //console.log("PRICE RESULTS:",priceResults);
     //console.log("PRICE RESULTS SORTED:",binarySort(priceResults, 'price').slice(0,20));
     //alert(JSON.stringify(priceResults));
-    return binarySort(priceResults, 'price').slice(0,5);    
+    return binarySort(priceResults, 'price').slice(0,18);    
 }

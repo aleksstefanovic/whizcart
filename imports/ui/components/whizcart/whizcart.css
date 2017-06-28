@@ -1,28 +1,40 @@
 html, body {
-	height: 100%;
+	height: auto;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	overflow: hidden;
 }
 
-#wrap {
-	min-height: 100%;
-}
-
-#main {
-	overflow:auto;
-	padding-bottom: 100px;
-}  
 
 #footer {
 	position: relative;
 	margin-bottom: 0px;
 	padding-bottom: 0px;
+	margin-bottom: 0px;
 	clear:both;
 	background-color: #5CB85C;
+	border-style: dotted;
+	border-color: pink;
+	overflow: hidden;
 }
+
+
+#main {
+	float: left;
+	padding-bottom: 0px;
+	border-style: dashed;
+	border-color: blue;
+	min-height: 100%;
+	width: 100%;
+	overflow: hidden;
+}  
 
 table {
 	margin-right: 20px; 
 	margin-top:20px; 
 	width: 100%;
+	overflow: hidden;
+	margin-bottom: 0px;
 
 }
 
@@ -34,12 +46,15 @@ tr th {
 	margin: auto;
 	color: white;
 	text-align: center;
+	overflow: hidden;
 }
 
 tr th a {
 	color: white;
+	overflow: hidden;
 }
 
 .allFootertext {
-	position: relative;
+	position: absolute;
+	overflow: hidden;
 }
