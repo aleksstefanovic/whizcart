@@ -1,30 +1,23 @@
-html, body, p{
-	/*height: 100% !important;
-	width: 100% !important;*/
+html, body {
 	margin: 0px;
-	padding: 0px;
-	height: 100%;
-	width: 100%;
 }
 
 .angular-google-map-container {
 	position: relative;
 	float: left;
-	/*top: 0;
-	bottom: 0;
+	top: 0;
+	left: 0;
 	right: 0;
-	left: 0;*/
-	height: 1000px;
-	width: 100%;
-	/*padding-left: 20px;*/
-	/*padding-bottom: 50px;
-	/*padding-top: 500px;*/
-	/*padding-bottom: -500px;
-	/*border-style: dashed;*/
-	min-height: 20%;
+	bottom: 0;
 	border-color: orange;
+	width: 100%;
+	height: 40vh;
 }
 
+.angular-google-map{
+	height: 100%;
+	width: 100%;
+}
 
 #distanceAmount {
 	float: left;
@@ -57,16 +50,16 @@ html, body, p{
 	background: linear-gradient(#34D140,#4BC350);
 }
 
-#cardsDivParent{
+#cardsDiv{
 	position: relative;
+	float: left;
 	/*border-style: dashed;
 	border-color: red;*/
-	overflow: hidden;
 	/*background-color: #42f486;*/
 	background-image: url("http://wonderopolis.org/wp-content/uploads/2010/11/Wonder-46-Cornucopia-Static-Image.jpg");
-	height: 100%;
+	height: 45vh;
 	width: 100%;
-	background-size: 100% 100%;
+	margin-top: -1vh;
 }
 
 .cards{
@@ -79,7 +72,7 @@ html, body, p{
 	border-color: #008000;  
 	margin-left: 10px; 
 	margin-right: 10px; 
-	margin-top: 10px; 
+	margin-top: 0px; 
 	margin-bottom: 10px;
 }
 
@@ -106,9 +99,7 @@ html, body, p{
 	border-color: black;*/
 	background: linear-gradient(#06f020,#5CB85C);
 	/*background-color: #5CB85C;*/
-	height: 100px;
-	margin-bottom: -10px;
-	padding-bottom: 0px;
+	height: 11vh;
 }
 
 #sideBar{

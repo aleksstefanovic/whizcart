@@ -1,4 +1,4 @@
-html, body, p {
+html, body, p{
 	padding: 0! important;
 	margin: 0!important;
 }
@@ -21,13 +21,6 @@ html{
 	overflow: hidden;
 	width: 100%;
 }
-
-#testDiv{
-	height: 100%;
-	width: 100%;
-	background-color: red;
-}
-
 
 
 table {
