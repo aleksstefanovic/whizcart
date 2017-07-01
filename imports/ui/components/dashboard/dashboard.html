@@ -59,7 +59,7 @@
 		
 	</div>
 	<div id="cardsDivParent">
-	<div ng-show = "dashboard.hasCards">
+		<div ng-show = "dashboard.hasCards">
 			<div  ng-repeat="card in dashboard.itemCards" class="cards">
 				<img src={{card.image}} class="cardImage">
 				<div class="cardInfo">
@@ -71,40 +71,24 @@
 		</div>
 	</div>
 
-	<!--<div id="map-canvas" style="clear: both">-->
+	<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
 
-	<div id="map-canvas">
-
-
-
-		<!--<script id="searchBoxUserLocation.tpl.html" type="text/ng-template">
-			<input type="text" placeholder="User Location">
-		</script>
-
-		<script id="mapSearchBox.tpl.html" type="text/ng-template">
-			<input type="text" placeholder="Favourite Stores">
-		</script>-->
-
-		<ui-gmap-google-map center="map.center" zoom="map.zoom" bounds="map.bounds" events="map.events" options="map.options" draggable="true" >
-
-
-			<ui-gmap-markers  models="mapMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true">
-				<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show" ng-cloak>
-					<p> <strong> Name: {{fullName}} </strong> </br>
-						{{fullAddress}}</br>
-						Postal Code: {{postalCode}}
-						<button ng-click='$parent.favouritesButtonClicked()'> Add To Favourites </button>
-						<!--<button ng-click='$parent.databaseButtonClicked()''> Add To Database </button>-->
-					</p>
-				</ui-gmap-window>
-			</ui-gmap-markers>
+		<ui-gmap-markers  models="mapMarkers" coords="'self'" icon="'icon'" click="onClick" fit="true">
+			<ui-gmap-window coords="activeModel" options="windowOptions" show="activeModel.show" ng-cloak>
+				<p> <strong> Name: {{fullName}} </strong> </br>
+					{{fullAddress}}</br>
+					Postal Code: {{postalCode}}
+					<button ng-click='$parent.favouritesButtonClicked()'> Add To Favourites </button>
+					<!--<button ng-click='$parent.databaseButtonClicked()''> Add To Database </button>-->
+				</p>
+			</ui-gmap-window>
+		</ui-gmap-markers>
 
 
 			<!--<ui-gmap-search-box options="searchBoxUserLocation.options" template="searchBoxUserLocation.template" events="searchBoxUserLocation.events" ng-model="searchModel.searchTerm"></ui-gmap-search-box>
 
 			<ui-gmap-search-box options="mapSearchBox.options" template="mapSearchBox.template" events="mapSearchBox.events" bounds="mapSearchBox.bounds" ></ui-gmap-search-box>-->
-		</ui-gmap-google-map>
-	</div>
+	</ui-gmap-google-map>
 
 	<!--<div id="sideBar">
 

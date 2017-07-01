@@ -1,8 +1,11 @@
-html, body {
-	height: auto;
-	padding-bottom: 0px;
-	margin-bottom: 0px;
-	overflow: hidden;
+html, body, p {
+	padding: 0! important;
+	margin: 0!important;
+}
+
+html{
+	margin: 0;
+	padding: 0;
 }
 
 
@@ -16,18 +19,16 @@ html, body {
 	/*border-style: dotted;
 	border-color: pink;*/
 	overflow: hidden;
+	width: 100%;
+}
+
+#testDiv{
+	height: 100%;
+	width: 100%;
+	background-color: red;
 }
 
 
-#main {
-	float: left;
-	padding-bottom: 0px;
-	/*border-style: dashed;
-	border-color: blue;*/
-	min-height: 100%;
-	width: 100%;
-	overflow: hidden;
-}  
 
 table {
 	margin-right: 20px; 
@@ -35,8 +36,8 @@ table {
 	width: 100%;
 	overflow: hidden;
 	margin-bottom: 0px;
-
 }
+
 
 tr th {
 	padding-top: 30px;

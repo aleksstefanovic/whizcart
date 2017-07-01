@@ -1,20 +1,4 @@
-.angular-google-map-container {
-	position: relative;
-	float: left;
-	/*top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;*/
-	height: 100%;
-	width: 100%;
-	/*padding-left: 20px;*/
-	/*padding-bottom: 50px;*/
-	padding-top: 500px;
-	/*border-style: dashed;
-	border-color: orange;*/
-}
-
-html, body{
+html, body, p{
 	/*height: 100% !important;
 	width: 100% !important;*/
 	margin: 0px;
@@ -22,6 +6,26 @@ html, body{
 	height: 100%;
 	width: 100%;
 }
+
+.angular-google-map-container {
+	position: relative;
+	float: left;
+	/*top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;*/
+	height: 1000px;
+	width: 100%;
+	/*padding-left: 20px;*/
+	/*padding-bottom: 50px;
+	/*padding-top: 500px;*/
+	/*padding-bottom: -500px;
+	/*border-style: dashed;*/
+	min-height: 20%;
+	border-color: orange;
+}
+
+
 #distanceAmount {
 	float: left;
 	position: relative;
@@ -49,7 +53,8 @@ html, body{
 	margin-bottom: 0px;
 	position: relative;
 	float: left;
-	background-color: #5CB85C;
+	/*background-color: #5CB85C;*/
+	background: linear-gradient(#34D140,#4BC350);
 }
 
 #cardsDivParent{
@@ -99,7 +104,8 @@ html, body{
 	border-radius: 1px;
 	/*border-style: dotted;
 	border-color: black;*/
-	background-color: #5CB85C;
+	background: linear-gradient(#06f020,#5CB85C);
+	/*background-color: #5CB85C;*/
 	height: 100px;
 	margin-bottom: -10px;
 	padding-bottom: 0px;
@@ -202,6 +208,7 @@ html, body{
 	margin-bottom: 0px;
 	padding-bottom: 0px;
 	height: 100%;
+	width: 100%;
 	overflow: hidden;
 }
 
@@ -255,6 +262,7 @@ input[type=range]::-moz-range-thumb {
 	height: 20px;
 	width: 40px;
 	border-radius: 12px;
+	/*/*#5CB85C;*/*/
 	background: #5CB85C;
 	cursor: pointer;
 }
